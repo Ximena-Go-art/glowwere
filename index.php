@@ -1,11 +1,12 @@
 <?php
+session_start();
 
-$seccion = '';
-$accion = '';
-
-// Si mandaron algo por GET seccion, lo guardo
-if (isset($_GET['seccion'])) {
-    $seccion = $_GET['seccion'];
+if(
+    !isset($_SESSION["logueado"]) ||
+    $_SESSION["logueado"] != true
+){
+    header("Location: login.php");
+    exit;
 }
 
 // Si mandaron algo por GET accion, lo guardo
@@ -13,11 +14,9 @@ if (isset($_GET['accion'])) {
     $accion = $_GET['accion'];
 }
 
-$archivo = $seccion . "_" . $accion . ".php";
+ $archivo = "inicio.php";
 
-if (!file_exists($archivo)) {
-    $archivo = "inicio.php"; // Archivo por defecto
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -41,75 +40,75 @@ if (!file_exists($archivo)) {
                 <div class="list-group list-group-flush">
                     
                     <a href="index.php?seccion=inicio&accion=mostrar" 
-                       class="list-group-item list-group-item-action border-0 rounded <?php echo ($seccion == 'inicio' || $seccion == '') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded <?php echo ($_SESSION["usuario"] == 'inicio' || $_SESSION["usuario"] == '') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        🏠 Inicio
                     </a>
 
                     <div class="fw-bold text-secondary small text-uppercase mt-4 mb-2 px-3">👥 Personas</div>
                     <a href="index.php?seccion=clientes&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'clientes') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'clientes') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Clientes
                     </a>
                     <a href="index.php?seccion=proveedores&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'proveedores') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'proveedores') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Proveedores
                     </a>
                     <a href="index.php?seccion=usuarios&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'usuarios') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'usuarios') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Usuarios
                     </a>
 
                     <div class="fw-bold text-secondary small text-uppercase mt-4 mb-2 px-3">📦 Inventario</div>
                     <a href="index.php?seccion=productos&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'productos') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"]    == 'productos') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Productos
                     </a>
                     <a href="index.php?seccion=familias&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'familias') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'familias') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Familias
                     </a>
 
                     <div class="fw-bold text-secondary small text-uppercase mt-4 mb-2 px-3">🛒 Ventas</div>
                     <a href="index.php?seccion=ventas&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'ventas') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"]       == 'ventas') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Ventas
                     </a>
                     <a href="index.php?seccion=ventas_detalles&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'ventas_detalles') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"]    == 'ventas_detalles') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Detalle de Ventas
                     </a>
 
                     <div class="fw-bold text-secondary small text-uppercase mt-4 mb-2 px-3">🚚 Compras</div>
                     <a href="index.php?seccion=compras&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'compras') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'compras') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Compras
                     </a>
                     <a href="index.php?seccion=compra_detalles&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'compra_detalles') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"]    == 'compra_detalles') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Detalle de Compras
                     </a>
 
                     <div class="fw-bold text-secondary small text-uppercase mt-4 mb-2 px-3">💰 Caja</div>
                     <a href="index.php?seccion=cajas&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'cajas') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'cajas') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Caja
                     </a>
                     <a href="index.php?seccion=formas_pago&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'formas_pago') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"]    == 'formas_pago') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Formas de Pago
                     </a>
 
                     <div class="fw-bold text-secondary small text-uppercase mt-4 mb-2 px-3">⚙️ Administración</div>
                     <a href="index.php?seccion=roles&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'roles') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'roles') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Roles
                     </a>
                     <a href="index.php?seccion=tipos_documentos&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'tipos_documentos') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"]    == 'tipos_documentos') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Tipos de Documentos
                     </a>
                     <a href="index.php?seccion=registros&accion=listar" 
-                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($seccion == 'registros') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
+                       class="list-group-item list-group-item-action border-0 rounded ps-4 <?php echo ($_SESSION["usuario"] == 'registros') ? 'bg-danger-subtle text-danger fw-bold' : ''; ?>">
                        Registros
                     </a>
 
@@ -117,12 +116,6 @@ if (!file_exists($archivo)) {
             </div>
             <div class="col-md-9 col-lg-10 p-4">
                 
-                <div class="d-flex justify-content-end mb-4">
-                    <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Buscar..." aria-label="Search">
-                        <button class="btn btn-outline-danger" type="submit">Buscar</button>
-                    </form>
-                </div>
 
                 <?php include $archivo; ?>
 

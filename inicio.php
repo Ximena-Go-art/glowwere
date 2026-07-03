@@ -6,12 +6,11 @@
             <p class="text-muted small m-0">Aquí tienes el resumen de tu negocio de cosmética de hoy.</p>
         </div>
         <div class="d-flex gap-2">
-        <a href="login.php" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
-            <i class="fas fa-sign-out-alt me-2"></i>Salir
-        </a>
-        <a href="index.php?seccion=ventas&accion=crear" class="btn btn-danger rounded-pill px-4 shadow-sm">
-            <i class="fas fa-plus me-2"></i> Nueva Venta
-        </a>
+    <a href="login.php?logout=1" 
+       class="btn btn-outline-danger btn-sm rounded-pill px-4 shadow-sm"
+         class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+    </a>
+</div>
     </div>
         
     </div>

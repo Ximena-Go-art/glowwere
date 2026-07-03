@@ -1,30 +1,48 @@
 <?php
 session_start();
-include 'conexion.php';
+include("conexion.php");
+
 $cnn = conection();
 
-$error = "";
+// Logout
+if (isset($_GET['logout'])) {
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = mysqli_real_escape_string($cnn, $_POST['username']);
-    $pass_ingresado = $_POST['password'];
+    $_SESSION = [];
+    session_destroy();
 
-    // Consulta segura usando sentencia preparada (o escape real)
-    $sql = "SELECT id_usuario, usuario, pass FROM usuarios WHERE usuario = '$username' AND actividad_usuario = 1";
-    $result = mysqli_query($cnn, $sql);
+    header("Location: login.php");
+    exit;
+}
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $usuario = mysqli_fetch_assoc($result);
-        
-        if ($pass_ingresado == $usuario['pass']) { // Aquí deberías usar password_verify si las contraseñas están hasheadas
-            $_SESSION['logueado_mi_sistema'] = true; // Cambiar a true si quieres marcar como logueado
-            $_SESSION['id_usuario'] = $usuario['id_usuario'];
-            $_SESSION['usuario'] = $usuario['usuario'];
-            header('Location: index.php');
+// Login
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+    $usuario = $_POST["username"];
+    $password = $_POST["password"];
+
+    $sql = "SELECT * FROM usuarios
+            WHERE usuario='$usuario'
+            AND actividad_usuario=1";
+
+    $resultado = mysqli_query($cnn, $sql);
+
+    if (mysqli_num_rows($resultado) == 1) {
+
+        $fila = mysqli_fetch_assoc($resultado);
+
+        if ($password == $fila["pass"]) {
+
+            $_SESSION["logueado"] = true;
+            $_SESSION["id_usuario"] = $fila["id_usuario"];
+            $_SESSION["usuario"] = $fila["usuario"];
+
+            header("Location: index.php");
             exit;
         }
     }
-    $error = "Usuario o contraseña incorrectos.";
+
+    header("Location: login.php?error=1");
+    exit;
 }
 ?>
 <!DOCTYPE html>
@@ -47,10 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <h4 class="fw-bold">Bienvenido</h4>
                         <p class="text-muted small">Ingresa tus credenciales para continuar</p>
                     </div>
-
-                    <?php if ($error): ?>
-                        <div class="alert alert-danger p-2 small text-center"><?= $error ?></div>
-                    <?php endif; ?>
 
                     <form method="POST">
                         <div class="mb-3">

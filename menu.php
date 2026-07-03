@@ -71,6 +71,7 @@
 
                       </ul>
                   </li>
+
                   <li class="nav-item">
                       <a class="nav-link disabled" aria-disabled="true">Usuarios</a>
                   </li>
@@ -84,6 +85,7 @@
                   <button class="btn btn-outline-success" type="submit">
                       Buscar
                   </button>
+
               </form>
           </div>
       </div>
