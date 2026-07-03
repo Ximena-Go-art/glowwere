@@ -10,13 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass_ingresado = $_POST['password'];
 
     // Consulta segura usando sentencia preparada (o escape real)
-    $sql = "SELECT id_usuario, usuario, pass FROM usuarios WHERE usuario = '$username' AND activo = 1";
+    $sql = "SELECT id_usuario, usuario, pass FROM usuarios WHERE usuario = '$username' AND actividad_usuario = 1";
     $result = mysqli_query($cnn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $usuario = mysqli_fetch_assoc($result);
         
-        if (password_verify($pass_ingresado, $usuario['pass'])) {
+        if ($pass_ingresado == $usuario['pass']) { // Aquí deberías usar password_verify si las contraseñas están hasheadas
             $_SESSION['logueado_mi_sistema'] = true;
             $_SESSION['id_usuario'] = $usuario['id_usuario'];
             $_SESSION['usuario'] = $usuario['usuario'];

@@ -2,14 +2,18 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
         <div>
-            <h2 class="fw-bold m-0">Hola, Administrador 👋</h2>
+            <h2 class="fw-bold m-0">Hola, <?= htmlspecialchars($_SESSION['usuario'] ?? 'Invitado')?> 👋</h2>
             <p class="text-muted small m-0">Aquí tienes el resumen de tu negocio de cosmética de hoy.</p>
         </div>
-        <div>
-            <a href="index.php?seccion=ventas&accion=crear" class="btn btn-danger rounded-pill px-4 shadow-sm">
-                + Nueva Venta
-            </a>
-        </div>
+        <div class="d-flex gap-2">
+        <a href="login.php" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+            <i class="fas fa-sign-out-alt me-2"></i>Salir
+        </a>
+        <a href="index.php?seccion=ventas&accion=crear" class="btn btn-danger rounded-pill px-4 shadow-sm">
+            <i class="fas fa-plus me-2"></i> Nueva Venta
+        </a>
+    </div>
+        
     </div>
 
     <div class="row g-3 mb-4">

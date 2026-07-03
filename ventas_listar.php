@@ -27,34 +27,24 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
 /* Consulta */
 
-$sql = "
-SELECT
-    v.id_ventas,
-    u.usuario,
-    c.cliente,
-    td.descripcion AS tipo_documento,
-    fp.descripcion AS forma_pago,
-    v.monto_total,
-    v.monto_pago,
-    v.monto_cambio,
-    v.estado,
-    v.fecha_registro
-FROM ventas v
-
-INNER JOIN usuarios u
-    ON v.id_usuario = u.id_usuario
-
-INNER JOIN clientes c
-    ON v.id_cliente = c.id_cliente
-
-INNER JOIN tipos_documentos td
-    ON v.tipo_documento = td.id_tipo_documento
-
-INNER JOIN formas_pago fp
-    ON v.id_forma_de_pago = fp.id_formas_pago
-
-WHERE v.deleted = 0
-";
+$sql = "SELECT 
+            v.id_ventas, 
+            u.usuario, 
+            c.cliente, 
+            td.descripcion AS tipo_documento, 
+            fp.descripcion AS formas_pago, 
+            v.monto_total, 
+            v.monto_pago, 
+            v.monto_cambio, 
+            v.estado, 
+            v.fecha_registro 
+        FROM ventas v 
+        INNER JOIN usuarios u ON v.id_usuario = u.id_usuario 
+        INNER JOIN clientes c ON v.id_cliente = c.id_cliente 
+        INNER JOIN tipos_documentos td ON v.tipo_documento = td.id_tipo_documento 
+        INNER JOIN formas_pagos fp ON v.id_formas_pago = fp.id_formas_pago 
+        WHERE v.deleted = 0 
+        ORDER BY v.fecha_registro DESC";
 
 $resultado = mysqli_query($cnn, $sql);
 
