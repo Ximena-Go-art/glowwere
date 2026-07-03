@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $usuario = mysqli_fetch_assoc($result);
         
         if ($pass_ingresado == $usuario['pass']) { // Aquí deberías usar password_verify si las contraseñas están hasheadas
-            $_SESSION['logueado_mi_sistema'] = true;
+            $_SESSION['logueado_mi_sistema'] = true; // Cambiar a true si quieres marcar como logueado
             $_SESSION['id_usuario'] = $usuario['id_usuario'];
             $_SESSION['usuario'] = $usuario['usuario'];
             header('Location: index.php');
