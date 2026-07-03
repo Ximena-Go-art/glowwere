@@ -65,12 +65,6 @@ $resultado = mysqli_query($cnn, $sql);
 
     <h2>Detalle de Ventas</h2>
 
-    <a
-        href="index.php?seccion=ventas_detalles&accion=modificar"
-        class="btn btn-success mb-3">
-        Nuevo Detalle
-    </a>
-
     <table class="table table-striped table-hover">
 
         <thead class="table-dark">
