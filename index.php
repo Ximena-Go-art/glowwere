@@ -1,22 +1,33 @@
 <?php
 session_start();
 
-if(
+if (
     !isset($_SESSION["logueado"]) ||
     $_SESSION["logueado"] != true
-){
+) {
     header("Location: login.php");
     exit;
 }
 
-// Si mandaron algo por GET accion, lo guardo
-if (isset($_GET['accion'])) {
-    $accion = $_GET['accion'];
+$seccion = "";
+$accion = "";
+
+// Obtener parámetros
+if (isset($_GET["seccion"])) {
+    $seccion = $_GET["seccion"];
 }
 
- $archivo = "inicio.php";
+if (isset($_GET["accion"])) {
+    $accion = $_GET["accion"];
+}
 
+// Construir el nombre del archivo
+$archivo = $seccion . "_" . $accion . ".php";
 
+// Si no existe, mostrar inicio
+if (!file_exists($archivo)) {
+    $archivo = "inicio.php";
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
