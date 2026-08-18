@@ -88,62 +88,36 @@ if (isset($_GET['id'])) {
 
 ?>
 
-<div class="container pt-4">
-
-    <div class="row">
-
-        <div class="col-6">
-            <h1>Tipos de Documentos</h1>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0"><?= ($datos['id_tipo_documento'] != '') ? 'Editar Tipo de Documento' : 'Nuevo Tipo de Documento' ?></h2>
+            <p class="text-muted small">Completa los datos para <?= ($datos['id_tipo_documento'] != '') ? 'actualizar' : 'registrar' ?> el tipo de documento</p>
         </div>
-
-        <div class="col-6 text-end">
-
-            <a
-                href="index.php?seccion=tipos_documentos&accion=listar"
-                class="btn btn-secondary">
-                Volver
-            </a>
-
-        </div>
-
-        <div class="col-12">
-
-            <form method="POST" class="mt-4">
-
-                <input
-                    type="hidden"
-                    name="id_tipo_documento"
-                    value="<?= $datos['id_tipo_documento'] ?>">
-
-                <div class="mb-3">
-
-                    <label
-                        for="descripcion"
-                        class="form-label">
-                        Descripción
-                    </label>
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="descripcion"
-                        name="descripcion"
-                        value="<?= htmlspecialchars($datos['descripcion']) ?>"
-                        required>
-
-                </div>
-
-                <button
-                    type="submit"
-                    name="btnGuardar"
-                    class="btn btn-primary">
-                    Guardar
-                </button>
-
-            </form>
-
-        </div>
-
+        <a href="index.php?seccion=tipos_documentos&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
     </div>
 
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <input type="hidden" name="id_tipo_documento" value="<?= $datos['id_tipo_documento'] ?>">
+
+                        <div class="mb-4">
+                            <label for="descripcion" class="form-label fw-bold small text-muted">Descripción</label>
+                            <input type="text" class="form-control form-control-lg rounded-3" id="descripcion" name="descripcion" 
+                                   value="<?= htmlspecialchars($datos['descripcion']) ?>" required placeholder="Ej: Factura A, Ticket, etc.">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                                <i class="fas fa-save me-2"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

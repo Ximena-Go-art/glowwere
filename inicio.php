@@ -7,12 +7,10 @@
         </div>
         <div class="d-flex gap-2">
     <a href="login.php?logout=1" 
-       class="btn btn-outline-danger btn-sm rounded-pill px-4 shadow-sm"
-         class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+       class="btn btn-outline-danger btn-sm rounded-pill px-4 shadow-sm">
+       <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
     </a>
 </div>
-    </div>
-        
     </div>
 
     <div class="row g-3 mb-4">

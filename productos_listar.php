@@ -12,9 +12,12 @@ $result = mysqli_query($cnn, $sql);
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3 class="fw-bold"><i class="fas fa-box text-danger"></i> Productos</h3>
+        <div>
+            <h2 class="fw-bold m-0">Productos</h2>
+            <p class="text-muted small">Inventario y stock de productos disponibles</p>
+        </div>
         <a href="index.php?seccion=productos&accion=modificar" class="btn btn-danger rounded-pill px-4">
-            <i class="fas fa-plus"></i> Nuevo Producto
+            + Nuevo Producto
         </a>
     </div>
 

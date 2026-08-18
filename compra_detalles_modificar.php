@@ -119,117 +119,94 @@ if (isset($_GET['id'])) {
 
 ?>
 
-<div class="container pt-4">
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0"><?= ($datos['id_compra_detalle'] != '') ? 'Editar Detalle' : 'Nuevo Detalle de Compra' ?></h2>
+            <p class="text-muted small">Registra los productos incluidos en una compra</p>
+        </div>
+        <a href="index.php?seccion=compra_detalles&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
+    </div>
 
-<h2>Detalle de Compra</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <input type="hidden" name="id_compra_detalle" value="<?= $datos['id_compra_detalle'] ?>">
 
-<form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted">Compra</label>
+                            <select name="id_compra" class="form-select form-select-lg rounded-3" required>
+                                <option value="">Seleccione</option>
+                                <?php mysqli_data_seek($compras, 0); while($c = mysqli_fetch_assoc($compras)){ ?>
+                                <option value="<?= $c['id_compra'] ?>" <?= ($datos['id_compra']==$c['id_compra']) ? 'selected' : '' ?>>
+                                    #<?= $c['id_compra'] ?> - <?= htmlspecialchars($c['numero_documento']) ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                        </div>
 
-<input
-type="hidden"
-name="id_compra_detalle"
-value="<?= $datos['id_compra_detalle'] ?>">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-muted">Producto</label>
+                            <select name="id_producto" class="form-select form-select-lg rounded-3" required>
+                                <option value="">Seleccione</option>
+                                <?php mysqli_data_seek($productos, 0); while($p = mysqli_fetch_assoc($productos)){ ?>
+                                <option value="<?= $p['id_producto'] ?>" <?= ($datos['id_producto']==$p['id_producto']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($p['nombre']) ?>
+                                </option>
+                                <?php } ?>
+                            </select>
+                        </div>
 
-<div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold small text-muted">Cantidad</label>
+                                <input type="number" name="cantidad" class="form-control form-control-lg rounded-3" 
+                                       value="<?= $datos['cantidad'] ?>" required placeholder="0">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold small text-muted">Precio Unit.</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" name="precio_unitario" id="precio_unit" class="form-control form-control-lg rounded-3" 
+                                           value="<?= $datos['precio_unitario'] ?>" required placeholder="0.00" style="border-top-left-radius:0;border-bottom-left-radius:0">
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold small text-muted">Total</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" id="total_calc" class="form-control form-control-lg rounded-3 bg-light" 
+                                           value="<?= $datos['precio_total'] ?>" readonly style="border-top-left-radius:0;border-bottom-left-radius:0">
+                                </div>
+                            </div>
+                        </div>
 
-<label>Compra</label>
+                        <input type="hidden" name="precio_total" id="precio_total" value="<?= $datos['precio_total'] ?>">
 
-<select
-name="id_compra"
-class="form-control"
-required>
-
-<?php while($c = mysqli_fetch_assoc($compras)){ ?>
-
-<option
-value="<?= $c['id_compra'] ?>"
-<?= ($datos['id_compra']==$c['id_compra']) ? 'selected' : '' ?>>
-
-<?= htmlspecialchars($c['numero_documento']) ?>
-
-</option>
-
-<?php } ?>
-
-</select>
-
+                        <div class="d-grid mt-3">
+                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                                <i class="fas fa-save me-2"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="mb-3">
-
-<label>Producto</label>
-
-<select
-name="id_producto"
-class="form-control"
-required>
-
-<?php while($p = mysqli_fetch_assoc($productos)){ ?>
-
-<option
-value="<?= $p['id_producto'] ?>"
-<?= ($datos['id_producto']==$p['id_producto']) ? 'selected' : '' ?>>
-
-<?= htmlspecialchars($p['nombre']) ?>
-
-</option>
-
-<?php } ?>
-
-</select>
-
-</div>
-
-<div class="mb-3">
-
-<label>Cantidad</label>
-
-<input
-type="number"
-name="cantidad"
-class="form-control"
-value="<?= $datos['cantidad'] ?>"
-required>
-
-</div>
-
-<div class="mb-3">
-
-<label>Precio Unitario</label>
-
-<input
-type="number"
-step="0.01"
-name="precio_unitario"
-class="form-control"
-value="<?= $datos['precio_unitario'] ?>"
-required>
-
-</div>
-
-<div class="mb-3">
-
-<label>Precio Total</label>
-
-<input
-type="number"
-step="0.01"
-name="precio_total"
-class="form-control"
-value="<?= $datos['precio_total'] ?>"
-required>
-
-</div>
-
-<button
-type="submit"
-name="btnGuardar"
-class="btn btn-primary">
-
-Guardar
-
-</button>
-
-</form>
-
-</div>
+<script>
+const cant = document.querySelector('input[name="cantidad"]');
+const pUnit = document.getElementById('precio_unit');
+const tCalc = document.getElementById('total_calc');
+const tHidden = document.getElementById('precio_total');
+function calcTotal() {
+    const val = (parseFloat(pUnit.value || 0) * parseInt(cant.value || 0)).toFixed(2);
+    tCalc.value = val;
+    tHidden.value = val;
+}
+cant.addEventListener('input', calcTotal);
+pUnit.addEventListener('input', calcTotal);
+</script>

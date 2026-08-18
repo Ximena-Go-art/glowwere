@@ -50,176 +50,63 @@ if (isset($_GET['ideliminar'])) {
 }
 ?>
 
-<div class="container pt-4">
-
-    <div class="row">
-
-        <div class="col-6">
-
-            <h1>Usuarios</h1>
-
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0">Usuarios</h2>
+            <p class="text-muted small">Gestión de usuarios del sistema</p>
         </div>
-
-        <div class="col-6 text-end">
-
-            <a
-                href="index.php?seccion=usuarios&accion=modificar"
-                class="btn btn-primary">
-
-                Nuevo Usuario
-
-            </a>
-
-        </div>
-
+        <a href="index.php?seccion=usuarios&accion=modificar" class="btn btn-danger rounded-pill px-4">
+            + Nuevo Usuario
+        </a>
     </div>
 
-    <table class="table table-striped table-hover mt-3">
-
-        <thead class="table-dark">
-
-            <tr>
-
-                <th>ID</th>
-
-                <th>Usuario</th>
-
-                <th>Email</th>
-
-                <th>Rol</th>
-
-                <th>Fecha Registro</th>
-
-                <th>Activo</th>
-
-                <th width="180">Acciones</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-        <?php
-
-        if(mysqli_num_rows($result)>0){
-
-            while($fila=mysqli_fetch_assoc($result)){
-
-        ?>
-
-            <tr>
-
-                <td>
-
-                    <?php echo $fila['id_usuario']; ?>
-
-                </td>
-
-                <td>
-
-                    <?php echo $fila['usuario']; ?>
-
-                </td>
-
-                <td>
-
-                    <?php echo $fila['email']; ?>
-
-                </td>
-
-                <td>
-
-                    <?php
-                    echo ($fila['rol']!="")
-                        ? $fila['rol']
-                        : "Sin rol";
-                    ?>
-
-                </td>
-
-                <td>
-
-                    <?php
-                    echo date(
-                        "d/m/Y H:i",
-                        strtotime($fila['fecha_registro'])
-                    );
-                    ?>
-
-                </td>
-
-                <td>
-
-                    <?php
-
-                    if($fila['actividad_usuario']==1){
-
-                        echo "<span class='badge bg-success'>
-                                Sí
-                              </span>";
-
-                    }else{
-
-                        echo "<span class='badge bg-danger'>
-                                No
-                              </span>";
-
-                    }
-
-                    ?>
-
-                </td>
-
-                <td>
-
-                    <a
-                        href="index.php?seccion=usuarios&accion=modificar&id=<?php echo $fila['id_usuario']; ?>"
-                        class="btn btn-warning btn-sm">
-
-                        Modificar
-
-                    </a>
-
-                    <a
-                        href="index.php?seccion=usuarios&accion=listar&ideliminar=<?php echo $fila['id_usuario']; ?>"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('¿Está seguro que desea eliminar este usuario?');">
-
-                        Eliminar
-
-                    </a>
-
-                </td>
-
-            </tr>
-
-        <?php
-
-            }
-
-        }else{
-
-        ?>
-
-            <tr>
-
-                <td colspan="7" class="text-center">
-
-                    No existen usuarios registrados.
-
-                </td>
-
-            </tr>
-
-        <?php
-
-        }
-
-        ?>
-
-        </tbody>
-
-    </table>
-
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Usuario</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Fecha Registro</th>
+                            <th>Activo</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(mysqli_num_rows($result)>0){ while($fila = mysqli_fetch_assoc($result)){ ?>
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted"><?= $fila['id_usuario'] ?></td>
+                            <td class="fw-bold"><?= htmlspecialchars($fila['usuario']) ?></td>
+                            <td><?= htmlspecialchars($fila['email']) ?></td>
+                            <td><span class="badge bg-light text-dark border"><?= ($fila['rol']!="") ? htmlspecialchars($fila['rol']) : "Sin rol" ?></span></td>
+                            <td><?= date("d/m/Y H:i", strtotime($fila['fecha_registro'])) ?></td>
+                            <td>
+                                <?php if($fila['actividad_usuario']==1){ ?>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Activo</span>
+                                <?php }else{ ?>
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill">Inactivo</span>
+                                <?php } ?>
+                            </td>
+                            <td class="text-end pe-4">
+                                <a href="index.php?seccion=usuarios&accion=modificar&id=<?= $fila['id_usuario'] ?>" 
+                                   class="btn btn-outline-warning btn-sm rounded-pill px-3 me-1">Editar</a>
+                                <a href="index.php?seccion=usuarios&accion=listar&ideliminar=<?= $fila['id_usuario'] ?>" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                   onclick="return confirm('¿Está seguro de eliminar este usuario?');">Eliminar</a>
+                            </td>
+                        </tr>
+                        <?php } }else{ ?>
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">No existen usuarios registrados.</td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

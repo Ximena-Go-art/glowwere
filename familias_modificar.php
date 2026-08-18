@@ -122,79 +122,60 @@ if (isset($_GET['id'])) {
      VISTA: FORMULARIO DE ALTA Y MODIFICACIÓN
 ======================================== -->
 
-<div class="container pt-4">
-
-    <div class="row">
-
-        <!-- Título de la pantalla -->
-        <div class="col-6">
-            <h1>Familias - Modificar</h1>
-        </div>
-
-        <!-- Botón de regreso al listado -->
-        <div class="col-6 text-end">
-            <a href="index.php?seccion=familias&accion=listar"
-               class="btn btn-secondary">
-                Volver
-            </a>
-        </div>
-
-        <div class="col-12">
-
-            <!-- Formulario principal -->
-            <form method="POST" class="mt-4">
-
-                <!-- ID oculto para identificar
-                     si se trata de un alta o modificación -->
-                <input
-                    type="hidden"
-                    name="id_familia"
-                    value="<?= $datos['id_familia'] ?>">
-
-                <!-- Campo Familia -->
-                <div class="mb-3">
-
-                    <label for="familia" class="form-label">
-                        Familia
-                    </label>
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        id="familia"
-                        name="familia"
-                        value="<?= htmlspecialchars($datos['familia']) ?>"
-                        required>
-
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold text-secondary">
+                        <i class="fas fa-edit me-2"></i> 
+                        <?= isset($datos['id_familia']) ? 'Modificar Familia' : 'Nueva Familia' ?>
+                    </h4>
+                    <a href="index.php?seccion=familias&accion=listar" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Volver
+                    </a>
                 </div>
 
-                <!-- Campo Descripción -->
-                <div class="mb-3">
+                <form id="formFamilia" method="POST">
+                    <input type="hidden" name="id_familia" value="<?= $datos['id_familia'] ?? '' ?>">
 
-                    <label for="descripcion" class="form-label">
-                        Descripción
-                    </label>
+                    <div class="mb-3">
+                        <label for="familia" class="form-label fw-semibold">Nombre de la Familia</label>
+                        <input type="text" class="form-control rounded-3" id="familia" name="familia" 
+                               value="<?= htmlspecialchars($datos['familia'] ?? '') ?>" required>
+                    </div>
 
-                    <textarea
-                        class="form-control"
-                        id="descripcion"
-                        name="descripcion"
-                        rows="3"><?= htmlspecialchars($datos['descripcion']) ?></textarea>
+                    <div class="mb-4">
+                        <label for="descripcion" class="form-label fw-semibold">Descripción</label>
+                        <textarea class="form-control rounded-3" id="descripcion" name="descripcion" rows="3"><?= htmlspecialchars($datos['descripcion'] ?? '') ?></textarea>
+                    </div>
 
-                </div>
-
-                <!-- Botón para guardar -->
-                <button
-                    type="submit"
-                    name="btnGuardar"
-                    class="btn btn-primary">
-                    Guardar
-                </button>
-
-            </form>
-
+                    <div class="d-grid">
+                        <button type="button" onclick="confirmarGuardado()" class="btn btn-danger rounded-pill py-2 shadow-sm">
+                            <i class="fas fa-save me-2"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-
     </div>
-
 </div>
+
+<script>
+function confirmarGuardado() {
+    Swal.fire({
+        title: '¿Confirmar cambios?',
+        text: "Los datos de la familia serán actualizados.",
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, guardar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Envío del formulario
+            document.getElementById('formFamilia').submit();
+        }
+    });
+}
+</script>

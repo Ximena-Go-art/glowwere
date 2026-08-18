@@ -50,143 +50,54 @@ if (isset($_GET['ideliminar'])) {
 }
 ?>
 
-<div class="container pt-4">
-
-    <div class="row">
-
-        <div class="col-6">
-
-            <h1>Registros del Sistema</h1>
-
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0">Registros del Sistema</h2>
+            <p class="text-muted small">Bitácora de actividades del sistema</p>
         </div>
-
     </div>
 
-    <table class="table table-striped table-hover mt-3">
-
-        <thead class="table-dark">
-
-            <tr>
-
-                <th>ID</th>
-
-                <th>Fecha y Hora</th>
-
-                <th>Usuario</th>
-
-                <th>Sección</th>
-
-                <th>Acción</th>
-
-                <th>Link</th>
-
-                <th>Sistema Operativo</th>
-
-                <th width="100">Acciones</th>
-
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-        <?php
-
-        if(mysqli_num_rows($result)>0){
-
-            while($fila=mysqli_fetch_assoc($result)){
-
-        ?>
-
-            <tr>
-
-                <td>
-
-                    <?php echo $fila['id_registros']; ?>
-
-                </td>
-
-                <td>
-
-                    <?php echo date("d/m/Y H:i:s", strtotime($fila['fecha_hora'])); ?>
-
-                </td>
-
-                <td>
-
-                    <?php echo $fila['usuario']; ?>
-
-                </td>
-
-                <td>
-
-                    <?php echo $fila['seccion']; ?>
-
-                </td>
-
-                <td>
-
-                    <?php echo $fila['accion']; ?>
-
-                </td>
-
-                <td>
-
-                    <small>
-
-                        <?php echo $fila['link']; ?>
-
-                    </small>
-
-                </td>
-
-                <td>
-
-                    <?php echo $fila['S.O']; ?>
-
-                </td>
-
-                <td>
-
-                    <a
-                        href="index.php?seccion=registros&accion=listar&ideliminar=<?php echo $fila['id_registros']; ?>"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('¿Eliminar este registro?');">
-
-                        Eliminar
-
-                    </a>
-
-                </td>
-
-            </tr>
-
-        <?php
-
-            }
-
-        }else{
-
-        ?>
-
-            <tr>
-
-                <td colspan="8" class="text-center">
-
-                    No existen registros.
-
-                </td>
-
-            </tr>
-
-        <?php
-
-        }
-
-        ?>
-
-        </tbody>
-
-    </table>
-
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Fecha y Hora</th>
+                            <th>Usuario</th>
+                            <th>Sección</th>
+                            <th>Acción</th>
+                            <th>Link</th>
+                            <th>S.O.</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(mysqli_num_rows($result)>0){ while($fila = mysqli_fetch_assoc($result)){ ?>
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted"><?= $fila['id_registros'] ?></td>
+                            <td><?= date("d/m/Y H:i:s", strtotime($fila['fecha_hora'])) ?></td>
+                            <td class="fw-bold"><?= htmlspecialchars($fila['usuario']) ?></td>
+                            <td><span class="badge bg-light text-dark border"><?= htmlspecialchars($fila['seccion']) ?></span></td>
+                            <td><?= htmlspecialchars($fila['accion']) ?></td>
+                            <td><small class="text-muted"><?= htmlspecialchars($fila['link']) ?></small></td>
+                            <td><?= htmlspecialchars($fila['S.O']) ?></td>
+                            <td class="text-end pe-4">
+                                <a href="index.php?seccion=registros&accion=listar&ideliminar=<?= $fila['id_registros'] ?>" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                   onclick="return confirm('¿Está seguro de eliminar este registro?');">Eliminar</a>
+                            </td>
+                        </tr>
+                        <?php } }else{ ?>
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">No existen registros.</td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

@@ -4,22 +4,23 @@ $cnn = conection();
 
 // --- 1. LÓGICA DE GUARDADO ---
 if (isset($_POST['btnGuardar'])) {
-    $id_ventas = intval($_POST['id_ventas']);
-    $id_usuario = intval($_POST['id_usuario']);
-    $id_cliente = intval($_POST['id_cliente']);
-    $tipo_documento = intval($_POST['tipo_documento']);
-    $id_forma_de_pago = intval($_POST['id_forma_de_pago']);
-    $monto_total = floatval($_POST['monto_total']);
-    $monto_pago = floatval($_POST['monto_pago']);
-    $monto_cambio = $monto_pago - $monto_total;
-    $estado = mysqli_real_escape_string($cnn, trim($_POST['estado']));
-    $fecha_registro = $_POST['fecha_registro'];
+    $id_ventas         = intval($_POST['id_ventas']);
+    $id_usuario        = intval($_POST['id_usuario']);
+    $id_cliente        = intval($_POST['id_cliente']);
+    $id_producto       = intval($_POST['id_producto']); 
+    $tipo_documento    = intval($_POST['tipo_documento']);
+    $id_forma_de_pago  = intval($_POST['id_forma_de_pago']);
+    $monto_total       = floatval($_POST['monto_total']);
+    $monto_pago        = floatval($_POST['monto_pago']);
+    $monto_cambio      = $monto_pago - $monto_total;
+    $estado            = mysqli_real_escape_string($cnn, trim($_POST['estado']));
+    $fecha_registro    = $_POST['fecha_registro'];
 
     if ($id_ventas == 0) {
-        $sql = "INSERT INTO ventas (id_usuario, id_cliente, tipo_documento, id_forma_de_pago, monto_total, monto_pago, monto_cambio, estado, fecha_registro) 
-                VALUES ($id_usuario, $id_cliente, $tipo_documento, $id_forma_de_pago, $monto_total, $monto_pago, $monto_cambio, '$estado', '$fecha_registro')";
+        $sql = "INSERT INTO ventas (id_usuario, id_cliente, id_producto, tipo_documento, id_forma_de_pago, monto_total, monto_pago, monto_cambio, estado, fecha_registro) 
+                VALUES ($id_usuario, $id_cliente, $id_producto, $tipo_documento, $id_forma_de_pago, $monto_total, $monto_pago, $monto_cambio, '$estado', '$fecha_registro')";
     } else {
-        $sql = "UPDATE ventas SET id_usuario=$id_usuario, id_cliente=$id_cliente, tipo_documento=$tipo_documento, id_forma_de_pago=$id_forma_de_pago, 
+        $sql = "UPDATE ventas SET id_usuario=$id_usuario, id_cliente=$id_cliente, id_producto=$id_producto, tipo_documento=$tipo_documento, id_forma_de_pago=$id_forma_de_pago, 
                 monto_total=$monto_total, monto_pago=$monto_pago, monto_cambio=$monto_cambio, estado='$estado', fecha_registro='$fecha_registro' 
                 WHERE id_ventas=$id_ventas";
     }
@@ -27,21 +28,41 @@ if (isset($_POST['btnGuardar'])) {
     if (mysqli_query($cnn, $sql)) {
         echo "<script>window.location='index.php?seccion=ventas&accion=listar';</script>";
         exit;
+    } else {
+        die("<div class='alert alert-danger m-3'><strong>Error al guardar:</strong> " . mysqli_error($cnn) . "</div>");
     }
 }
 
 // --- 2. CONSULTAS PARA COMBOS Y CARGA ---
-$usuarios = mysqli_query($cnn, "SELECT id_usuario, usuario FROM usuarios WHERE deleted = 0");
-$clientes = mysqli_query($cnn, "SELECT id_cliente, cliente FROM clientes WHERE deleted = 0");
-$tipos = mysqli_query($cnn, "SELECT id_tipo_documento, descripcion FROM tipos_documentos WHERE deleted = 0");
-$formas = mysqli_query($cnn, "SELECT id_formas_pago, descripcion FROM formas_pagos WHERE deleted = 0");
+$usuarios  = mysqli_query($cnn, "SELECT id_usuario, usuario FROM usuarios WHERE deleted = 0");
+$clientes  = mysqli_query($cnn, "SELECT id_cliente, cliente FROM clientes WHERE deleted = 0");
 
-$datos = ['id_ventas' => '', 'id_usuario' => '', 'id_cliente' => '', 'tipo_documento' => '', 'id_forma_de_pago' => '', 'monto_total' => '', 'monto_pago' => '', 'monto_cambio' => '', 'estado' => 'PENDIENTE', 'fecha_registro' => date('Y-m-d')];
+// CAMBIO AQUÍ: Reemplaza 'nombre' por el nombre real de la columna de texto en tu tabla productos si es distinta
+$productos = mysqli_query($cnn, "SELECT id_producto, nombre FROM productos WHERE deleted = 0"); 
+
+$tipos     = mysqli_query($cnn, "SELECT id_tipo_documento, descripcion FROM tipos_documentos WHERE deleted = 0");
+$formas    = mysqli_query($cnn, "SELECT id_formas_pago, descripcion FROM formas_pagos WHERE deleted = 0");
+
+$datos = [
+    'id_ventas' => '', 
+    'id_usuario' => '', 
+    'id_cliente' => '', 
+    'id_producto' => '', 
+    'tipo_documento' => '', 
+    'id_forma_de_pago' => '', 
+    'monto_total' => '', 
+    'monto_pago' => '', 
+    'monto_cambio' => '', 
+    'estado' => 'PENDIENTE', 
+    'fecha_registro' => date('Y-m-d')
+];
 
 if (isset($_GET['id'])) {
     $id_ventas = intval($_GET['id']);
     $res = mysqli_query($cnn, "SELECT * FROM ventas WHERE id_ventas = $id_ventas");
-    if ($res && mysqli_num_rows($res) > 0) $datos = mysqli_fetch_assoc($res);
+    if ($res && mysqli_num_rows($res) > 0) {
+        $datos = mysqli_fetch_assoc($res);
+    }
 }
 ?>
 
@@ -59,30 +80,54 @@ if (isset($_GET['id'])) {
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Usuario</label>
-                        <select name="id_usuario" class="form-select"><?php mysqli_data_seek($usuarios, 0); while($u = mysqli_fetch_assoc($usuarios)){ ?>
-                            <option value="<?= $u['id_usuario'] ?>" <?= ($datos['id_usuario']==$u['id_usuario']) ? 'selected' : '' ?>><?= htmlspecialchars($u['usuario']) ?></option>
-                        <?php } ?></select>
+                        <select name="id_usuario" class="form-select">
+                            <?php if ($usuarios) { mysqli_data_seek($usuarios, 0); while($u = mysqli_fetch_assoc($usuarios)){ ?>
+                                <option value="<?= $u['id_usuario'] ?>" <?= ($datos['id_usuario'] == $u['id_usuario']) ? 'selected' : '' ?>><?= htmlspecialchars($u['usuario']) ?></option>
+                            <?php } } ?>
+                        </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Cliente</label>
-                        <select name="id_cliente" class="form-select"><?php mysqli_data_seek($clientes, 0); while($c = mysqli_fetch_assoc($clientes)){ ?>
-                            <option value="<?= $c['id_cliente'] ?>" <?= ($datos['id_cliente']==$c['id_cliente']) ? 'selected' : '' ?>><?= htmlspecialchars($c['cliente']) ?></option>
-                        <?php } ?></select>
+                        <select name="id_cliente" class="form-select">
+                            <?php if ($clientes) { mysqli_data_seek($clientes, 0); while($c = mysqli_fetch_assoc($clientes)){ ?>
+                                <option value="<?= $c['id_cliente'] ?>" <?= ($datos['id_cliente'] == $c['id_cliente']) ? 'selected' : '' ?>><?= htmlspecialchars($c['cliente']) ?></option>
+                            <?php } } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN DE PRODUCTO -->
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-bold text-danger">Producto</label>
+                        <select name="id_producto" class="form-select" required>
+                            <option value="">Seleccione un producto...</option>
+                            <?php if ($productos) { mysqli_data_seek($productos, 0); while($p = mysqli_fetch_assoc($productos)){ ?>
+                                <!-- CAMBIO AQUÍ: Asegúrate de usar la misma clave de la columna de tu base de datos (ej. 'nombre') -->
+                                <option value="<?= $p['id_producto'] ?>" <?= (isset($datos['id_producto']) && $datos['id_producto'] == $p['id_producto']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($p['nombre']) ?>
+                                </option>
+                            <?php } } ?>
+                        </select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Tipo Documento</label>
-                        <select name="tipo_documento" class="form-select"><?php mysqli_data_seek($tipos, 0); while($t = mysqli_fetch_assoc($tipos)){ ?>
-                            <option value="<?= $t['id_tipo_documento'] ?>" <?= ($datos['tipo_documento']==$t['id_tipo_documento']) ? 'selected' : '' ?>><?= htmlspecialchars($t['descripcion']) ?></option>
-                        <?php } ?></select>
+                        <select name="tipo_documento" class="form-select">
+                            <?php if ($tipos) { mysqli_data_seek($tipos, 0); while($t = mysqli_fetch_assoc($tipos)){ ?>
+                                <option value="<?= $t['id_tipo_documento'] ?>" <?= ($datos['tipo_documento'] == $t['id_tipo_documento']) ? 'selected' : '' ?>><?= htmlspecialchars($t['descripcion']) ?></option>
+                            <?php } } ?>
+                        </select>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Forma de Pago</label>
-                        <select name="id_forma_de_pago" class="form-select"><?php mysqli_data_seek($formas, 0); while($f = mysqli_fetch_assoc($formas)){ ?>
-                            <option value="<?= $f['id_formas_pago'] ?>" <?= ($datos['id_forma_de_pago']==$f['id_formas_pago']) ? 'selected' : '' ?>><?= htmlspecialchars($f['descripcion']) ?></option>
-                        <?php } ?></select>
+                        <select name="id_forma_de_pago" class="form-select">
+                            <?php if ($formas) { mysqli_data_seek($formas, 0); while($f = mysqli_fetch_assoc($formas)){ ?>
+                                <option value="<?= $f['id_formas_pago'] ?>" <?= ($datos['id_forma_de_pago'] == $f['id_formas_pago']) ? 'selected' : '' ?>><?= htmlspecialchars($f['descripcion']) ?></option>
+                            <?php } } ?>
+                        </select>
                     </div>
                 </div>
 
@@ -108,7 +153,7 @@ if (isset($_GET['id'])) {
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold">Fecha</label>
-                        <input type="date" name="fecha_registro" class="form-control" value="<?= substr($datos['fecha_registro'],0,10) ?>">
+                        <input type="date" name="fecha_registro" class="form-control" value="<?= substr($datos['fecha_registro'], 0, 10) ?>">
                     </div>
                 </div>
 
@@ -124,7 +169,9 @@ if (isset($_GET['id'])) {
     const total = document.getElementById('monto_total');
     const pago = document.getElementById('monto_pago');
     const cambio = document.getElementById('monto_cambio');
-    function calcular() { cambio.value = (parseFloat(pago.value || 0) - parseFloat(total.value || 0)).toFixed(2); }
+    function calcular() { 
+        cambio.value = (parseFloat(pago.value || 0) - parseFloat(total.value || 0)).toFixed(2); 
+    }
     total.addEventListener('input', calcular);
     pago.addEventListener('input', calcular);
 </script>

@@ -136,133 +136,90 @@ if (isset($_GET['id'])) {
 
 ?>
 
-<div class="container pt-4">
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0"><?= ($datos['id_compra'] != '') ? 'Editar Compra' : 'Nueva Compra' ?></h2>
+            <p class="text-muted small">Registra una compra realizada a un proveedor</p>
+        </div>
+        <a href="index.php?seccion=compras&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
+    </div>
 
-<h2>Compras</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <form method="POST">
+                        <input type="hidden" name="id_compra" value="<?= $datos['id_compra'] ?>">
 
-<form method="POST">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">Usuario</label>
+                                <select name="id_usuario" class="form-select form-select-lg rounded-3">
+                                    <option value="">Seleccione</option>
+                                    <?php mysqli_data_seek($usuarios, 0); while($u = mysqli_fetch_assoc($usuarios)){ ?>
+                                    <option value="<?= $u['id_usuario'] ?>" <?= ($datos['id_usuario']==$u['id_usuario']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($u['usuario']) ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">Proveedor</label>
+                                <select name="id_proveedor" class="form-select form-select-lg rounded-3">
+                                    <option value="">Seleccione</option>
+                                    <?php mysqli_data_seek($proveedores, 0); while($p = mysqli_fetch_assoc($proveedores)){ ?>
+                                    <option value="<?= $p['id_proveedor'] ?>" <?= ($datos['id_proveedor']==$p['id_proveedor']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($p['proveedor']) ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
 
-<input
-type="hidden"
-name="id_compra"
-value="<?= $datos['id_compra'] ?>">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">Tipo Documento</label>
+                                <select name="id_tipo_documento" class="form-select form-select-lg rounded-3">
+                                    <option value="">Seleccione</option>
+                                    <?php mysqli_data_seek($tipos, 0); while($t = mysqli_fetch_assoc($tipos)){ ?>
+                                    <option value="<?= $t['id_tipo_documento'] ?>" <?= ($datos['id_tipo_documento']==$t['id_tipo_documento']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($t['descripcion']) ?>
+                                    </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">N° Documento</label>
+                                <input type="text" name="numero_documento" class="form-control form-control-lg rounded-3" 
+                                       value="<?= htmlspecialchars($datos['numero_documento']) ?>" placeholder="Número de factura">
+                            </div>
+                        </div>
 
-<div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">Monto Total</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" step="0.01" name="monto_total" class="form-control form-control-lg rounded-3" 
+                                           value="<?= $datos['monto_total'] ?>" placeholder="0.00" style="border-top-left-radius:0;border-bottom-left-radius:0">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold small text-muted">Fecha</label>
+                                <input type="date" name="fecha_registro" class="form-control form-control-lg rounded-3" 
+                                       value="<?= substr($datos['fecha_registro'],0,10) ?>">
+                            </div>
+                        </div>
 
-<label>Usuario</label>
-
-<select
-name="id_usuario"
-class="form-control">
-
-<?php while($u = mysqli_fetch_assoc($usuarios)){ ?>
-
-<option
-value="<?= $u['id_usuario'] ?>"
-<?= ($datos['id_usuario']==$u['id_usuario']) ? 'selected' : '' ?>>
-
-<?= htmlspecialchars($u['usuario']) ?>
-
-</option>
-
-<?php } ?>
-
-</select>
-
-</div>
-
-<div class="mb-3">
-
-<label>Proveedor</label>
-
-<select
-name="id_proveedor"
-class="form-control">
-
-<?php while($p = mysqli_fetch_assoc($proveedores)){ ?>
-
-<option
-value="<?= $p['id_proveedor'] ?>"
-<?= ($datos['id_proveedor']==$p['id_proveedor']) ? 'selected' : '' ?>>
-
-<?= htmlspecialchars($p['proveedor']) ?>
-
-</option>
-
-<?php } ?>
-
-</select>
-
-</div>
-
-<div class="mb-3">
-
-<label>Tipo Documento</label>
-
-<select
-name="id_tipo_documento"
-class="form-control">
-
-<?php while($t = mysqli_fetch_assoc($tipos)){ ?>
-
-<option
-value="<?= $t['id_tipo_documento'] ?>"
-<?= ($datos['id_tipo_documento']==$t['id_tipo_documento']) ? 'selected' : '' ?>>
-
-<?= htmlspecialchars($t['descripcion']) ?>
-
-</option>
-
-<?php } ?>
-
-</select>
-
-</div>
-
-<div class="mb-3">
-
-<label>Número Documento</label>
-
-<input
-type="text"
-name="numero_documento"
-class="form-control"
-value="<?= htmlspecialchars($datos['numero_documento']) ?>">
-
-</div>
-
-<div class="mb-3">
-
-<label>Monto Total</label>
-
-<input
-type="number"
-step="0.01"
-name="monto_total"
-class="form-control"
-value="<?= $datos['monto_total'] ?>">
-
-</div>
-
-<div class="mb-3">
-
-<label>Fecha</label>
-
-<input
-type="date"
-name="fecha_registro"
-class="form-control"
-value="<?= substr($datos['fecha_registro'],0,10) ?>">
-
-</div>
-
-<button
-type="submit"
-name="btnGuardar"
-class="btn btn-primary">
-Guardar
-</button>
-
-</form>
-
+                        <div class="d-grid mt-3">
+                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                                <i class="fas fa-save me-2"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

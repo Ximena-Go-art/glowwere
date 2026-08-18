@@ -33,65 +33,51 @@ $resultado = mysqli_query($cnn, $sql);
 ?>
 
 
-<!-- vista de listado de familias en formato HTML -->
-<div class="container mt-4">
-    <!-- Título -->
-    <h2>Familias</h2>
-    <!-- Botón para agregar nueva familia -->
-    <a
-      href="index.php?seccion=familias&accion=modificar"
-      class="btn btn-success mb-3">
-      Nueva Familia
-    </a>
-    <!-- Tabla para mostrar las familias -->
-    <table class="table table-striped">
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0">Familias</h2>
+            <p class="text-muted small">Gestión de categorías y familias de productos</p>
+        </div>
+        <a href="index.php?seccion=familias&accion=modificar" class="btn btn-danger rounded-pill px-4">
+            + Nueva Familia
+        </a>
+    </div>
 
-        <thead>
-
-            <tr>
-                <th>ID</th>
-                <th>Familia</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-            </tr>
-
-        </thead>
-        <!--*-- verificamos si el resultado tiene filas para mostrar -->
-        <tbody>
-
-            <?php while($fila=mysqli_fetch_assoc($resultado)){ ?>
-
-            <tr>
-                <!--*-- mostramos los datos de cada familia en una fila de la tabla -->
-                <td><?= $fila['id_familia'] ?></td>
-
-                <td><?= $fila['familia'] ?></td>
-
-                <td><?= $fila['descripcion'] ?></td>
-
-                <td>
-                    <!-- Botón de modificación -->  
-                    <a 
-                    href="index.php?seccion=familias&accion=modificar&id=<?= $fila['id_familia'] ?>"
-                    class="btn btn-warning btn-sm">
-                    Modificar
-                    </a>
-                    <!-- Botón de eliminación -->
-                    <a
-                     href="index.php?seccion=familias&accion=listar&eliminar=<?= $fila['id_familia'] ?>"
-                        class="btn btn-sm btn-danger"
-                         onclick="return confirm('¿Desea eliminar esta familia?')">
-                             Eliminar
-                    </a>
-
-                </td>
-
-            </tr>
-
-            <?php } ?>
-
-        </tbody>
-
-    </table>
-
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Familia</th>
+                            <th>Descripción</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while($fila = mysqli_fetch_assoc($resultado)){ ?>
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted"><?= $fila['id_familia'] ?></td>
+                            <td class="fw-bold"><?= htmlspecialchars($fila['familia']) ?></td>
+                            <td><?= htmlspecialchars($fila['descripcion']) ?></td>
+                            <td class="text-end pe-4">
+                                <a href="index.php?seccion=familias&accion=modificar&id=<?= $fila['id_familia'] ?>" 
+                                   class="btn btn-outline-warning btn-sm rounded-pill px-3 me-1">
+                                   Editar
+                                </a>
+                                <a href="index.php?seccion=familias&accion=listar&eliminar=<?= $fila['id_familia'] ?>" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                   onclick="return confirm('¿Está seguro de eliminar esta familia?');">
+                                   Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

@@ -43,61 +43,45 @@ $resultado = mysqli_query($cnn, $sql);
 
 ?>
 
-<div class="container mt-4">
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold m-0">Roles</h2>
+            <p class="text-muted small">Gestión de roles y permisos del sistema</p>
+        </div>
+        <a href="index.php?seccion=roles&accion=modificar" class="btn btn-danger rounded-pill px-4">
+            + Nuevo Rol
+        </a>
+    </div>
 
-    <h2>Roles</h2>
-
-    <a
-        href="index.php?seccion=roles&accion=modificar"
-        class="btn btn-success mb-3">
-        Nuevo Rol
-    </a>
-
-    <table class="table table-striped">
-
-        <thead>
-
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Acciones</th>
-            </tr>
-
-        </thead>
-
-        <tbody>
-
-            <?php while($fila = mysqli_fetch_assoc($resultado)){ ?>
-
-            <tr>
-
-                <td><?= $fila['id_rol'] ?></td>
-
-                <td><?= htmlspecialchars($fila['nombre']) ?></td>
-
-                <td>
-
-                    <a
-                        href="index.php?seccion=roles&accion=modificar&id=<?= $fila['id_rol'] ?>"
-                        class="btn btn-warning btn-sm">
-                        Modificar
-                    </a>
-
-                    <a
-                        href="index.php?seccion=roles&accion=listar&eliminar=<?= $fila['id_rol'] ?>"
-                        class="btn btn-danger btn-sm"
-                        onclick="return confirm('¿Desea eliminar este rol?')">
-                        Eliminar
-                    </a>
-
-                </td>
-
-            </tr>
-
-            <?php } ?>
-
-        </tbody>
-
-    </table>
-
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Nombre</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while($fila = mysqli_fetch_assoc($resultado)){ ?>
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted"><?= $fila['id_rol'] ?></td>
+                            <td class="fw-bold"><?= htmlspecialchars($fila['nombre']) ?></td>
+                            <td class="text-end pe-4">
+                                <a href="index.php?seccion=roles&accion=modificar&id=<?= $fila['id_rol'] ?>" 
+                                   class="btn btn-outline-warning btn-sm rounded-pill px-3 me-1">Editar</a>
+                                <a href="index.php?seccion=roles&accion=listar&eliminar=<?= $fila['id_rol'] ?>" 
+                                   class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                   onclick="return confirm('¿Está seguro de eliminar este rol?');">Eliminar</a>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
