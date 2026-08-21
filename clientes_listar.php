@@ -8,6 +8,7 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     $sql_eliminar = "UPDATE clientes SET deleted = 1 WHERE id_cliente = $id_cliente";
     
     if (mysqli_query($cnn, $sql_eliminar)) {
+        registrar_accion($cnn, "Clientes", "Eliminó el cliente #$id_cliente");
         echo "<script>window.location='index.php?seccion=clientes&accion=listar';</script>";
     } else {
         echo "<div class='alert alert-danger m-3'>Error al eliminar: " . mysqli_error($cnn) . "</div>";

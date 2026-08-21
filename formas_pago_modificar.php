@@ -58,6 +58,12 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        if ($id_formas_pago == 0) {
+            registrar_accion($cnn, "Formas de Pago", "Registró la forma de pago '$descripcion'");
+        } else {
+            registrar_accion($cnn, "Formas de Pago", "Modificó la forma de pago #$id_formas_pago ($descripcion)");
+        }
+
         echo "
         <script>
              window.location='index.php?seccion=formas_pago&accion=listar';

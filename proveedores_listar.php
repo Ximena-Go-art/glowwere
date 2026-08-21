@@ -18,6 +18,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
     if (mysqli_query($cnn, $sql_eliminar)) {
 
+        registrar_accion($cnn, "Proveedores", "Eliminó el proveedor #$id_proveedor");
+
         echo "
         <script>
             window.location='index.php?seccion=proveedores&accion=listar';

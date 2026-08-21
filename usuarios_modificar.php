@@ -49,6 +49,8 @@ if (isset($_POST['btnGuardar'])) {
 
             $nuevoId = mysqli_insert_id($cnn);
 
+            registrar_accion($cnn, "Usuarios", "Registró el usuario '$usuario'");
+
             echo "<script>
 
                     alert('Usuario guardado correctamente');
@@ -84,6 +86,8 @@ if (isset($_POST['btnGuardar'])) {
         $resp = mysqli_query($cnn, $sql);
 
         if ($resp) {
+
+            registrar_accion($cnn, "Usuarios", "Modificó el usuario #$id_usuario ($usuario)");
 
             echo "<script>
 

@@ -21,6 +21,7 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
     //--*-- ejecutamos la consulta de eliminación
     if (mysqli_query($cnn, $sql_eliminar)) {
+        registrar_accion($cnn, "Familias", "Eliminó la familia #$id_familia");
         echo "<script>window.location='index.php?seccion=familias&accion=listar ';</script>";
         exit;
     } else {

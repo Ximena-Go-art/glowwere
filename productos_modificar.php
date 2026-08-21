@@ -22,6 +22,12 @@ if (isset($_POST['btnGuardar'])) {
     }
 
     if (mysqli_query($cnn, $sql)) {
+        $nuevo_id = mysqli_insert_id($cnn);
+        if (empty($id)) {
+            registrar_accion($cnn, "Productos", "Registró el producto '$nombre'");
+        } else {
+            registrar_accion($cnn, "Productos", "Modificó el producto #$id ($nombre)");
+        }
         echo "<script>
             window.location.href='index.php?seccion=productos&accion=listar';
         </script>";

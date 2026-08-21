@@ -28,6 +28,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
     if (mysqli_query($cnn, $sql_eliminar)) {
 
+        registrar_accion($cnn, "Roles", "Eliminó el rol #$id_rol");
+
         echo "<script>window.location='index.php?seccion=roles&accion=listar ';</script>";
         exit;
 

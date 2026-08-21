@@ -104,6 +104,14 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        $nuevo_id = mysqli_insert_id($cnn);
+
+        if ($id_compra == 0) {
+            registrar_accion($cnn, "Compras", "Registró la compra #$nuevo_id del proveedor ID $id_proveedor");
+        } else {
+            registrar_accion($cnn, "Compras", "Modificó la compra #$id_compra");
+        }
+
         echo "
         <script>
         window.location='index.php?seccion=compras&accion=listar';

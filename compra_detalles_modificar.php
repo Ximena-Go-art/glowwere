@@ -84,6 +84,14 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        $nuevo_id = mysqli_insert_id($cnn);
+
+        if ($id_compra_detalle == 0) {
+            registrar_accion($cnn, "Detalle de Compras", "Registró el detalle #$nuevo_id de la compra #$id_compra");
+        } else {
+            registrar_accion($cnn, "Detalle de Compras", "Modificó el detalle #$id_compra_detalle de la compra #$id_compra");
+        }
+
         echo "
         <script>
             window.location='index.php?seccion=compra_detalles&accion=listar';

@@ -26,6 +26,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
     if (mysqli_query($cnn, $sql_eliminar)) {
 
+        registrar_accion($cnn, "Tipos de Documentos", "Eliminó el tipo de documento #$id_tipo_documento");
+
         echo "<script>window.location='index.php?seccion=tipos_documentos&accion=listar ';</script>";
         exit;
 

@@ -37,6 +37,8 @@ if (isset($_GET['ideliminar'])) {
 
     } else {
 
+        registrar_accion($cnn, "Usuarios", "Eliminó el usuario #$idEliminar");
+
         echo "<script>
 
             alert('Usuario eliminado correctamente.');

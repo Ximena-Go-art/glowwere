@@ -50,6 +50,14 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        $nuevo_id = mysqli_insert_id($cnn);
+
+        if ($id_rol == 0) {
+            registrar_accion($cnn, "Roles", "Registró el rol '$nombre'");
+        } else {
+            registrar_accion($cnn, "Roles", "Modificó el rol #$id_rol ($nombre)");
+        }
+
         echo "
         <script>
              window.location='index.php?seccion=roles&accion=listar';

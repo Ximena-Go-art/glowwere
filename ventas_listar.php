@@ -18,6 +18,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
     mysqli_query($cnn, $sqlEliminar);
 
+    registrar_accion($cnn, "Ventas", "Eliminó la venta #$id_ventas");
+
     echo "
     <script>
         window.location='index.php?seccion=ventas&accion=listar';

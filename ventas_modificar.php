@@ -26,6 +26,12 @@ if (isset($_POST['btnGuardar'])) {
     }
 
     if (mysqli_query($cnn, $sql)) {
+        $nuevo_id = mysqli_insert_id($cnn);
+        if ($id_ventas == 0) {
+            registrar_accion($cnn, "Ventas", "Registró la venta #$nuevo_id por un monto de $" . number_format($monto_total, 2, ',', '.'));
+        } else {
+            registrar_accion($cnn, "Ventas", "Modificó la venta #$id_ventas");
+        }
         echo "<script>window.location='index.php?seccion=ventas&accion=listar';</script>";
         exit;
     } else {

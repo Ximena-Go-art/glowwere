@@ -85,6 +85,14 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        $nuevo_id = mysqli_insert_id($cnn);
+
+        if ($id_proveedor == 0) {
+            registrar_accion($cnn, "Proveedores", "Registró el proveedor '$proveedor'");
+        } else {
+            registrar_accion($cnn, "Proveedores", "Modificó el proveedor #$id_proveedor ($proveedor)");
+        }
+
         echo "
         <script>
             window.location='index.php?seccion=proveedores&accion=listar';

@@ -48,6 +48,12 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        if ($id_tipo_documento == 0) {
+            registrar_accion($cnn, "Tipos de Documentos", "Registró el tipo de documento '$descripcion'");
+        } else {
+            registrar_accion($cnn, "Tipos de Documentos", "Modificó el tipo de documento #$id_tipo_documento ($descripcion)");
+        }
+
         echo "
         <script>
              window.location='index.php?seccion=tipos_documentos&accion=listar';

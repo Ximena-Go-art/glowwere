@@ -69,6 +69,14 @@ if (isset($_POST['btnGuardar'])) {
     // Verifica si la operación fue exitosa
     if ($resultado) {
 
+        $nuevo_id = mysqli_insert_id($cnn);
+
+        if ($id_familia == 0) {
+            registrar_accion($cnn, "Familias", "Registró la familia '$familia'");
+        } else {
+            registrar_accion($cnn, "Familias", "Modificó la familia #$id_familia ($familia)");
+        }
+
         // Regresa al listado de familias
         echo "
         <script>

@@ -28,6 +28,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
     if (mysqli_query($cnn, $sql_eliminar)) {
 
+        registrar_accion($cnn, "Formas de Pago", "Eliminó la forma de pago #$id_formas_pago");
+
         echo "<script>window.location='index.php?seccion=formas_pago&accion=listar ';</script>";
         exit;
 

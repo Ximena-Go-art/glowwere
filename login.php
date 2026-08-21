@@ -8,6 +8,8 @@ $cnn = conection();
 // Logout
 if (isset($_GET['logout'])) {
 
+    registrar_accion($cnn, "Sesiones", "Cerró sesión");
+
     $_SESSION = [];
     session_destroy();
 
@@ -37,10 +39,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["id_usuario"] = $fila["id_usuario"];
             $_SESSION["usuario"] = $fila["usuario"];
 
+            registrar_accion($cnn, "Sesiones", "Inició sesión");
+
             header("Location: index.php");
             exit;
         }
     }
+
+    $usuarioEsc = mysqli_real_escape_string($cnn, $usuario);
+    registrar_accion($cnn, "Sesiones", "Intento de acceso fallido con el usuario '$usuarioEsc'");
 
     header("Location: login.php?error=1");
     exit;

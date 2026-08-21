@@ -64,6 +64,14 @@ if (isset($_POST['btnGuardar'])) {
 
     if ($resultado) {
 
+        $nuevo_id = mysqli_insert_id($cnn);
+
+        if ($id_cliente == 0) {
+            registrar_accion($cnn, "Clientes", "Registró el cliente '$cliente'");
+        } else {
+            registrar_accion($cnn, "Clientes", "Modificó el cliente #$id_cliente ($cliente)");
+        }
+
         echo "
         <script>
 

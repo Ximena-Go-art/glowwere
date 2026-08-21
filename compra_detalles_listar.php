@@ -6,6 +6,7 @@ $cnn = conection();
 if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     $id = intval($_GET['eliminar']);
     mysqli_query($cnn, "UPDATE compra_detalles SET deleted = 1 WHERE id_compra_detalle = $id");
+    registrar_accion($cnn, "Detalle de Compras", "Eliminó el detalle #$id");
     header("Location: index.php?seccion=compra_detalles&accion=listar");
     exit;
 }
