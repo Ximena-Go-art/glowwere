@@ -49,6 +49,6 @@ function registrar_accion($cnn, $seccion, $accion) {
   $accion  = mysqli_real_escape_string($cnn, substr($accion, 0, 255));
   $link    = mysqli_real_escape_string($cnn, substr($link, 0, 255));
 
-  return mysqli_query($cnn, "INSERT INTO registros (id_usuario, fecha_hora, seccion, accion, link, `S.O`, deleted)
+  return mysqli_query($cnn, "INSERT INTO registros (id_usuario, fecha_hora, seccion, accion, link, `S_O`, deleted)
                              VALUES ($id_usuario, NOW(), '$seccion', '$accion', '$link', '$so', 0)");
 }

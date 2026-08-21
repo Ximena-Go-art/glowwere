@@ -295,7 +295,7 @@ $coloresSeccion = array(
                             <td><span class="badge bg-<?= $color ?>-subtle text-<?= $color ?> border border-<?= $color ?>-subtle rounded-pill"><?= htmlspecialchars($fila['seccion']) ?></span></td>
                             <td><?= htmlspecialchars($fila['accion']) ?></td>
                             <td><small class="text-muted"><?= htmlspecialchars($fila['link']) ?></small></td>
-                            <td><?= htmlspecialchars($fila['S.O']) ?></td>
+                            <td><?= htmlspecialchars($fila['S_O']) ?></td>
                             <td class="text-end pe-4">
                                 <a href="index.php?seccion=registros&accion=listar&ideliminar=<?= $fila['id_registros'] ?>" 
                                    class="btn btn-outline-danger btn-sm rounded-pill px-3"
