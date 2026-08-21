@@ -1,5 +1,6 @@
 <?php
 include "conexion.php";
+include_once "paginador.php";
 $cnn = conection();
 
 /* Consulta */
@@ -39,7 +40,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     }
 }
 
-$resultado = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 10);
+$resultado = $pag['data'];
 
 ?>
 
@@ -83,5 +85,6 @@ $resultado = mysqli_query($cnn, $sql);
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>

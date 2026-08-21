@@ -1,5 +1,6 @@
 <?php
 include "conexion.php";
+include_once "paginador.php";
 $cnn = conection();
 
 /* Eliminación lógica */
@@ -17,7 +18,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
 
 /* Consulta */
 $sql = "SELECT id_cliente, cliente, documento FROM clientes WHERE deleted = 0";
-$resultado = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 10);
+$resultado = $pag['data'];
 ?>
 
 <div class="container-fluid py-4">
@@ -68,5 +70,6 @@ $resultado = mysqli_query($cnn, $sql);
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>

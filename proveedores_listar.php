@@ -1,6 +1,7 @@
 <?php
 
 include "conexion.php";
+include_once "paginador.php";
 
 $cnn = conection();
 
@@ -42,7 +43,8 @@ FROM proveedores
 WHERE deleted = 0
 ";
 
-$resultado = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 10);
+$resultado = $pag['data'];
 
 ?>
 
@@ -104,5 +106,6 @@ $resultado = mysqli_query($cnn, $sql);
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>

@@ -1,12 +1,13 @@
 <?php
 
 include_once "conexion.php";
+include_once "paginador.php";
 
 $cnn = conection();
 
 /* Consulta: libro de caja unificado */
 
-$sql = "
+$sqlUnion = "
 
 SELECT * FROM (
 
@@ -59,13 +60,15 @@ SELECT * FROM (
     WHERE cj.deleted = 0
 
 ) AS movimientos
-
-ORDER BY fecha_movimiento DESC, importe DESC
 ";
 
-$resultado = mysqli_query($cnn, $sql);
+$sqlSaldo = "SELECT IFNULL(SUM(importe), 0) AS saldo FROM ($sqlUnion) AS movimientos_saldo";
+$resSaldo = mysqli_query($cnn, $sqlSaldo);
+$filaSaldo = mysqli_fetch_assoc($resSaldo);
+$total_caja = floatval($filaSaldo['saldo']);
 
-$total_caja = 0;
+$pag = paginar_consulta($cnn, "$sqlUnion ORDER BY fecha_movimiento DESC, importe DESC", 10);
+$resultado = $pag['data'];
 ?>
 
 <div class="container-fluid py-4">
@@ -132,5 +135,6 @@ $total_caja = 0;
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>

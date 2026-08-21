@@ -1,5 +1,6 @@
 <?php
 include "conexion.php";
+include_once "paginador.php";
 $cnn = conection();
 
 /* ============================
@@ -15,7 +16,8 @@ $sql = "SELECT
         WHERE u.deleted = 0
         ORDER BY u.usuario ASC";
 
-$result = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 10);
+$result = $pag['data'];
 
 /* ============================
    ELIMINAR (BAJA LÓGICA)
@@ -110,5 +112,6 @@ if (isset($_GET['ideliminar'])) {
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>

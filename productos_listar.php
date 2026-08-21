@@ -1,5 +1,6 @@
 <?php
 include_once "conexion.php";
+include_once "paginador.php";
 $cnn = conection();
 
 // Consulta incluyendo la columna 'costo'
@@ -7,7 +8,8 @@ $sql = "SELECT p.*, f.familia AS familia
         FROM productos p 
         LEFT JOIN familias f ON p.id_familia = f.id_familia 
         WHERE p.deleted = 0 ORDER BY p.nombre";
-$result = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 10);
+$result = $pag['data'];
 ?>
 
 <div class="container-fluid py-4">
@@ -55,6 +57,7 @@ $result = mysqli_query($cnn, $sql);
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>
 

@@ -1,5 +1,6 @@
 <?php
 include "conexion.php";
+include_once "paginador.php";
 $cnn = conection();
 
 /* ============================
@@ -112,10 +113,10 @@ $sql = "SELECT
         LEFT JOIN usuarios u
             ON r.id_usuario = u.id_usuario
         WHERE $where
-        ORDER BY r.fecha_hora DESC
-        LIMIT 500";
+        ORDER BY r.fecha_hora DESC";
 
-$result = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 15);
+$result = $pag['data'];
 
 $hayFiltros = ($filtro_usuario > 0 || $filtro_seccion != '' || $filtro_buscar != '' || $filtro_desde != '' || $filtro_hasta != '');
 
@@ -311,10 +312,6 @@ $coloresSeccion = array(
                 </table>
             </div>
         </div>
-        <?php if(!$hayFiltros && $totalRegistros > 500){ ?>
-        <div class="card-footer bg-white border-top-0 text-center text-muted small py-3">
-            Mostrando los últimos 500 movimientos. Utilice los filtros para acotar la búsqueda.
-        </div>
-        <?php } ?>
+        <?php render_paginador($pag); ?>
     </div>
 </div>

@@ -1,6 +1,7 @@
 <?php
 // obtenemos el arreglo de familias desde el controlador
 include "conexion.php";
+include_once "paginador.php";
 $cnn = conection();
 
 //--*--  consulta para obtener los datos de las familias que no han sido eliminados,
@@ -30,7 +31,8 @@ if (isset($_GET['eliminar']) && is_numeric($_GET['eliminar'])) {
     }
 }
 //--*-- ejecutamos la consulta y obtenemos el resultado
-$resultado = mysqli_query($cnn, $sql);
+$pag = paginar_consulta($cnn, $sql, 10);
+$resultado = $pag['data'];
 ?>
 
 
@@ -80,5 +82,6 @@ $resultado = mysqli_query($cnn, $sql);
                 </table>
             </div>
         </div>
+        <?php render_paginador($pag); ?>
     </div>
 </div>
