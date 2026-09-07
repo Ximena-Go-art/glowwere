@@ -113,12 +113,16 @@ $sql = "SELECT
         LEFT JOIN usuarios u
             ON r.id_usuario = u.id_usuario
         WHERE $where
-        ORDER BY r.fecha_hora DESC";
+        ORDER BY $orden $direccion";
 
 $pag = paginar_consulta($cnn, $sql, 15);
 $result = $pag['data'];
 
 $hayFiltros = ($filtro_usuario > 0 || $filtro_seccion != '' || $filtro_buscar != '' || $filtro_desde != '' || $filtro_hasta != '');
+
+/* Ordenamiento */
+$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_registros';
+$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
 
 $coloresSeccion = array(
     'Ventas'              => 'danger',
@@ -149,11 +153,11 @@ $coloresSeccion = array(
         <div class="col-sm-6 col-xl-3">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-danger-subtle text-danger rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;background-color:#FCE4EC;color:#F48FB1">
                         <i class="fas fa-clipboard-list"></i>
                     </div>
                     <div>
-                        <div class="text-muted small fw-bold">ACCIONES REGISTRADAS</div>
+                        <div class="small fw-bold" style="color:#4a454a">ACCIONES REGISTRADAS</div>
                         <div class="fs-4 fw-bold"><?= $totalRegistros ?></div>
                     </div>
                 </div>
@@ -163,11 +167,11 @@ $coloresSeccion = array(
         <div class="col-sm-6 col-xl-3">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;background-color:#F3E5F5;color:#C5B4E3">
                         <i class="fas fa-calendar-day"></i>
                     </div>
                     <div>
-                        <div class="text-muted small fw-bold">MOVIMIENTOS DE HOY</div>
+                        <div class="small fw-bold" style="color:#4a454a">MOVIMIENTOS DE HOY</div>
                         <div class="fs-4 fw-bold"><?= $hoyRegistros ?></div>
                     </div>
                 </div>
@@ -177,11 +181,11 @@ $coloresSeccion = array(
         <div class="col-sm-6 col-xl-3">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;background-color:#E8F5E9;color:#4CAF50">
                         <i class="fas fa-cart-shopping"></i>
                     </div>
                     <div>
-                        <div class="text-muted small fw-bold">VENTAS DE HOY</div>
+                        <div class="small fw-bold" style="color:#4a454a">VENTAS DE HOY</div>
                         <div class="fs-4 fw-bold"><?= $ventasHoy ?></div>
                     </div>
                 </div>
@@ -191,11 +195,11 @@ $coloresSeccion = array(
         <div class="col-sm-6 col-xl-3">
             <div class="card border-0 shadow-sm rounded-4 h-100">
                 <div class="card-body d-flex align-items-center">
-                    <div class="bg-warning-subtle text-warning rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 me-3" style="width:48px;height:48px;background-color:#FFF8E1;color:#E6C24D">
                         <i class="fas fa-users"></i>
                     </div>
                     <div>
-                        <div class="text-muted small fw-bold">USUARIOS CON ACTIVIDAD</div>
+                        <div class="small fw-bold" style="color:#4a454a">USUARIOS CON ACTIVIDAD</div>
                         <div class="fs-4 fw-bold"><?= $usuariosActivos ?></div>
                     </div>
                 </div>
@@ -255,11 +259,12 @@ $coloresSeccion = array(
                     </div>
 
                     <div class="col-md-4 d-flex align-items-end gap-2">
-                        <button type="submit" class="btn btn-danger rounded-pill px-4">
+                        <button type="submit" class="btn rounded-pill px-4" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff">
                             <i class="fas fa-filter me-1"></i> Filtrar
                         </button>
                         <?php if($hayFiltros){ ?>
-                            <a href="index.php?seccion=registros&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">
+                            <a href="index.php?seccion=registros&accion=listar" class="btn rounded-pill px-4"
+                               style="border-color:#C5B4E3;color:#C5B4E3">
                                 Limpiar
                             </a>
                         <?php } ?>
@@ -273,9 +278,12 @@ $coloresSeccion = array(
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">ID</th>
+                            <th class="ps-4">
+                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_registros'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
+                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
+                            </th>
                             <th>Fecha y Hora</th>
                             <th>Usuario</th>
                             <th>Sección</th>
@@ -299,8 +307,9 @@ $coloresSeccion = array(
                             <td><?= htmlspecialchars($fila['S_O']) ?></td>
                             <td class="text-end pe-4">
                                 <a href="index.php?seccion=registros&accion=listar&ideliminar=<?= $fila['id_registros'] ?>" 
-                                   class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                   onclick="return confirm('¿Está seguro de eliminar este registro?');">Eliminar</a>
+                                   class="btn btn-sm rounded-pill px-3" title="Eliminar"
+                                   style="border-color:#E57373;color:#E57373"
+                                   onclick="return confirm('¿Está seguro de eliminar este registro?');"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                         <?php } }else{ ?>

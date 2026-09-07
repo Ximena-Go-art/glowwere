@@ -14,12 +14,23 @@ if (isset($_POST['btnGuardar'])) {
     if ($id == 0) {
         $sql = "INSERT INTO ventas_detalles (id_ventas, id_producto, monto_venta, cantidad_productos, monto_total) 
                 VALUES ($id_ventas, $id_producto, $monto_venta, $cantidad, $total)";
+        mysqli_query($cnn, $sql);
+        mysqli_query($cnn, "UPDATE productos SET stock = stock - $cantidad WHERE id_producto = $id_producto");
+        $ok = true;
     } else {
+        // Revertir stock viejo
+        $antes = mysqli_query($cnn, "SELECT cantidad_productos FROM ventas_detalles WHERE id_ventas_detalles = $id");
+        if ($antes && $fila = mysqli_fetch_assoc($antes)) {
+            mysqli_query($cnn, "UPDATE productos SET stock = stock + " . intval($fila['cantidad_productos']) . " WHERE id_producto = $id_producto");
+        }
         $sql = "UPDATE ventas_detalles SET id_ventas=$id_ventas, id_producto=$id_producto, monto_venta=$monto_venta, 
                 cantidad_productos=$cantidad, monto_total=$total WHERE id_ventas_detalles=$id";
+        mysqli_query($cnn, $sql);
+        mysqli_query($cnn, "UPDATE productos SET stock = stock - $cantidad WHERE id_producto = $id_producto");
+        $ok = true;
     }
 
-    if (mysqli_query($cnn, $sql)) {
+    if ($ok) {
         $nuevo_id = mysqli_insert_id($cnn);
         if ($id == 0) {
             registrar_accion($cnn, "Detalle de Ventas", "Registró el detalle #$nuevo_id de la venta #$id_ventas");

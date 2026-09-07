@@ -4,22 +4,6 @@ include_once "paginador.php";
 $cnn = conection();
 
 /* ============================
-   LISTADO DE USUARIOS
-============================ */
-
-$sql = "SELECT
-            u.*,
-            r.nombre AS rol
-        FROM usuarios u
-        LEFT JOIN roles r
-            ON u.id_rol = r.id_rol
-        WHERE u.deleted = 0
-        ORDER BY u.usuario ASC";
-
-$pag = paginar_consulta($cnn, $sql, 10);
-$result = $pag['data'];
-
-/* ============================
    ELIMINAR (BAJA LÓGICA)
 ============================ */
 
@@ -52,6 +36,45 @@ if (isset($_GET['ideliminar'])) {
     }
 
 }
+
+/* ============================
+   FILTROS
+============================ */
+
+$filtro_buscar = isset($_GET['f_buscar']) ? trim($_GET['f_buscar']) : '';
+$filtro_rol    = (isset($_GET['f_rol']) && is_numeric($_GET['f_rol'])) ? intval($_GET['f_rol']) : 0;
+$filtro_estado = (isset($_GET['f_estado']) && in_array($_GET['f_estado'], ['0','1'])) ? intval($_GET['f_estado']) : -1;
+
+$condiciones = array("u.deleted = 0");
+
+if ($filtro_buscar != '') {
+    $buscarSeguro = mysqli_real_escape_string($cnn, $filtro_buscar);
+    $condiciones[] = "(u.usuario LIKE '%$buscarSeguro%' OR u.email LIKE '%$buscarSeguro%')";
+}
+if ($filtro_rol > 0) {
+    $condiciones[] = "u.id_rol = $filtro_rol";
+}
+if ($filtro_estado >= 0) {
+    $condiciones[] = "u.actividad_usuario = $filtro_estado";
+}
+
+$where = implode(" AND ", $condiciones);
+
+/* Ordenamiento */
+$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_usuario';
+$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
+
+$listaRoles = mysqli_query($cnn, "SELECT id_rol, nombre FROM roles WHERE deleted = 0 ORDER BY nombre ASC");
+
+$sql = "SELECT u.*, r.nombre AS rol
+        FROM usuarios u
+        LEFT JOIN roles r ON u.id_rol = r.id_rol
+        WHERE $where
+        ORDER BY $orden $direccion";
+
+$pag = paginar_consulta($cnn, $sql, 10);
+$result = $pag['data'];
+$hayFiltros = ($filtro_buscar != '' || $filtro_rol > 0 || $filtro_estado >= 0);
 ?>
 
 <div class="container-fluid py-4">
@@ -60,18 +83,61 @@ if (isset($_GET['ideliminar'])) {
             <h2 class="fw-bold m-0">Usuarios</h2>
             <p class="text-muted small">Gestión de usuarios del sistema</p>
         </div>
-        <a href="index.php?seccion=usuarios&accion=modificar" class="btn btn-danger rounded-pill px-4">
+        <a href="index.php?seccion=usuarios&accion=modificar" class="btn rounded-pill px-4" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff">
             + Nuevo Usuario
         </a>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body py-3">
+            <form method="GET" action="index.php">
+                <input type="hidden" name="seccion" value="usuarios">
+                <input type="hidden" name="accion" value="listar">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-muted">Buscar</label>
+                        <input type="text" name="f_buscar" class="form-control" placeholder="Usuario o email..."
+                               value="<?= htmlspecialchars($filtro_buscar) ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted">Rol</label>
+                        <select name="f_rol" class="form-select">
+                            <option value="0">Todos los roles</option>
+                            <?php if($listaRoles){ while($r = mysqli_fetch_assoc($listaRoles)){ ?>
+                                <option value="<?= $r['id_rol'] ?>" <?= ($filtro_rol == $r['id_rol']) ? 'selected' : '' ?>><?= htmlspecialchars($r['nombre']) ?></option>
+                            <?php } } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-muted">Estado</label>
+                        <select name="f_estado" class="form-select">
+                            <option value="-1">Todos</option>
+                            <option value="1" <?= ($filtro_estado === 1) ? 'selected' : '' ?>>Activo</option>
+                            <option value="0" <?= ($filtro_estado === 0) ? 'selected' : '' ?>>Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end gap-2">
+                        <button type="submit" class="btn rounded-pill px-4" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff"><i class="fas fa-filter me-1"></i> Filtrar</button>
+                        <?php if($hayFiltros){ ?>
+                            <a href="index.php?seccion=usuarios&accion=listar" class="btn rounded-pill px-4" style="border-color:#C5B4E3;color:#C5B4E3">Limpiar</a>
+                        <?php } ?>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                    <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">ID</th>
+                            <th class="ps-4">
+                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_usuario'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
+                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
+                            </th>
                             <th>Usuario</th>
                             <th>Email</th>
                             <th>Rol</th>
@@ -97,10 +163,12 @@ if (isset($_GET['ideliminar'])) {
                             </td>
                             <td class="text-end pe-4">
                                 <a href="index.php?seccion=usuarios&accion=modificar&id=<?= $fila['id_usuario'] ?>" 
-                                   class="btn btn-outline-warning btn-sm rounded-pill px-3 me-1">Editar</a>
+                                   class="btn btn-sm rounded-pill px-3" title="Editar"
+                                   style="border-color:#E6C24D;color:#E6C24D"><i class="fas fa-pen"></i></a>
                                 <a href="index.php?seccion=usuarios&accion=listar&ideliminar=<?= $fila['id_usuario'] ?>" 
-                                   class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                   onclick="return confirm('¿Está seguro de eliminar este usuario?');">Eliminar</a>
+                                   class="btn btn-sm rounded-pill px-3" title="Eliminar"
+                                   style="border-color:#E57373;color:#E57373"
+                                   onclick="return confirm('¿Está seguro de eliminar este usuario?');"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                         <?php } }else{ ?>

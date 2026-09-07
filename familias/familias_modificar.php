@@ -139,7 +139,8 @@ if (isset($_GET['id'])) {
                         <i class="fas fa-edit me-2"></i> 
                         <?= isset($datos['id_familia']) ? 'Modificar Familia' : 'Nueva Familia' ?>
                     </h4>
-                    <a href="index.php?seccion=familias&accion=listar" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                    <a href="index.php?seccion=familias&accion=listar" class="btn btn-sm rounded-pill px-3"
+                       style="border-color:#C5B4E3;color:#C5B4E3">
                         <i class="fas fa-arrow-left me-1"></i> Volver
                     </a>
                 </div>
@@ -159,7 +160,7 @@ if (isset($_GET['id'])) {
                     </div>
 
                     <div class="d-grid">
-                        <button type="button" onclick="confirmarGuardado()" class="btn btn-danger rounded-pill py-2 shadow-sm">
+                        <button type="button" onclick="confirmarGuardado()" class="btn rounded-pill py-2 shadow-sm" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff">
                             <i class="fas fa-save me-2"></i> Guardar Cambios
                         </button>
                     </div>
@@ -176,7 +177,7 @@ function confirmarGuardado() {
         text: "Los datos de la familia serán actualizados.",
         icon: 'question',
         showCancelButton: true,
-        confirmButtonColor: '#dc3545',
+        confirmButtonColor: '#F48FB1',
         cancelButtonColor: '#6c757d',
         confirmButtonText: 'Sí, guardar'
     }).then((result) => {

@@ -2,21 +2,22 @@
 include_once "conexion.php";
 $cnn = conection();
 
-// Lógica de guardado simplificada
+// Lógica de guardado
 if (isset($_POST['btnGuardar'])) {
     $id = $_POST['id_producto'];
     $codigo = $_POST['codigo'];
     $nombre = $_POST['nombre'];
-    $costo = $_POST['costo']; // Nuevo campo
+    $id_familia = !empty($_POST['id_familia']) ? intval($_POST['id_familia']) : 'NULL';
+    $costo = $_POST['costo'];
     $precio = $_POST['precio'];
     $stock = $_POST['stock'];
     $activo = isset($_POST['producto_activo']) ? 1 : 0;
 
     if (empty($id)) {
-        $sql = "INSERT INTO productos (codigo, nombre, costo, precio, stock, producto_activo, deleted) 
-                VALUES ('$codigo', '$nombre', '$costo', '$precio', '$stock', $activo, 0)";
+        $sql = "INSERT INTO productos (codigo, nombre, id_familia, costo, precio, stock, producto_activo, deleted) 
+                VALUES ('$codigo', '$nombre', $id_familia, '$costo', '$precio', '$stock', $activo, 0)";
     } else {
-        $sql = "UPDATE productos SET codigo='$codigo', nombre='$nombre', costo='$costo', 
+        $sql = "UPDATE productos SET codigo='$codigo', nombre='$nombre', id_familia=$id_familia, costo='$costo', 
                 precio='$precio', stock='$stock', producto_activo=$activo 
                 WHERE id_producto=$id";
     }
@@ -38,7 +39,7 @@ if (isset($_POST['btnGuardar'])) {
 $campos = [];
 if(isset($_GET['id'])){
     $idProducto = $_GET['id'];
-    $result = mysqli_query($cnn, "SELECT * FROM productos WHERE id_producto='$idProducto'");
+    $result = mysqli_query($cnn, "SELECT p.*, f.familia AS nombre_familia FROM productos p LEFT JOIN familias f ON p.id_familia = f.id_familia WHERE p.id_producto='$idProducto'");
     $campos = mysqli_fetch_assoc($result);
 }
 ?>
@@ -49,7 +50,7 @@ if(isset($_GET['id'])){
             <h2 class="fw-bold m-0"><?= empty($campos) ? 'Nuevo Producto' : 'Editar Producto' ?></h2>
             <p class="text-muted small">Completa los datos para <?= empty($campos) ? 'registrar' : 'actualizar' ?> el producto</p>
         </div>
-        <a href="index.php?seccion=productos&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
+        <a href="index.php?seccion=productos&accion=listar" class="btn rounded-pill px-4" style="border-color:#C5B4E3;color:#C5B4E3">Volver</a>
     </div>
 
     <div class="row justify-content-center">
@@ -67,6 +68,21 @@ if(isset($_GET['id'])){
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold small text-muted">Nombre</label>
                                 <input type="text" name="nombre" class="form-control form-control-lg rounded-3" value="<?= $campos['nombre'] ?? '' ?>" required placeholder="Nombre del producto">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3 position-relative">
+                                <label class="form-label fw-bold small text-muted">Familia</label>
+                                <input type="hidden" name="id_familia" id="id_familia" value="<?= $campos['id_familia'] ?? '' ?>">
+                                <input type="text" id="familia_input" class="form-control form-control-lg rounded-3" 
+                                       autocomplete="off" placeholder="Escriba para buscar familia..."
+                                       value="<?= $campos['nombre_familia'] ?? ($campos['familia'] ?? '') ?>">
+                                <div id="familia_sugerencias" class="list-group position-absolute w-100" 
+                                     style="z-index:1050; display:none; top:100%; max-height:200px; overflow-y:auto;"></div>
+                                <small id="familia_estado" class="text-muted">
+                                    <?= !empty($campos['id_familia']) ? 'Familia: ' . htmlspecialchars($campos['nombre_familia'] ?? '') : 'Sin familia asignada' ?>
+                                </small>
                             </div>
                         </div>
 
@@ -98,7 +114,7 @@ if(isset($_GET['id'])){
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                            <button type="submit" name="btnGuardar" class="btn btn-lg rounded-pill shadow-sm" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff">
                                 <i class="fas fa-save me-2"></i> Guardar Cambios
                             </button>
                         </div>
@@ -108,3 +124,63 @@ if(isset($_GET['id'])){
         </div>
     </div>
 </div>
+
+<script>
+(function() {
+    const input = document.getElementById('familia_input');
+    const hidden = document.getElementById('id_familia');
+    const sugerencias = document.getElementById('familia_sugerencias');
+    const estado = document.getElementById('familia_estado');
+    let timeout = null;
+
+    input.addEventListener('input', function() {
+        clearTimeout(timeout);
+        const valor = this.value.trim();
+
+        if (valor.length < 1) {
+            sugerencias.style.display = 'none';
+            sugerencias.innerHTML = '';
+            hidden.value = '';
+            estado.textContent = 'Sin familia asignada';
+            return;
+        }
+
+        timeout = setTimeout(function() {
+            fetch('familias/familias_buscar.php?q=' + encodeURIComponent(valor))
+                .then(function(resp) { return resp.json(); })
+                .then(function(data) {
+                    sugerencias.innerHTML = '';
+                    if (data.length === 0) {
+                        sugerencias.style.display = 'none';
+                        return;
+                    }
+                    data.forEach(function(item) {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'list-group-item list-group-item-action';
+                        btn.textContent = item.familia;
+                        btn.addEventListener('click', function() {
+                            input.value = item.familia;
+                            hidden.value = item.id_familia;
+                            sugerencias.style.display = 'none';
+                            sugerencias.innerHTML = '';
+                            estado.textContent = 'Familia: ' + item.familia;
+                        });
+                        sugerencias.appendChild(btn);
+                    });
+                    sugerencias.style.display = 'block';
+                });
+        }, 300);
+    });
+
+    input.addEventListener('blur', function() {
+        setTimeout(function() { sugerencias.style.display = 'none'; }, 200);
+    });
+
+    input.addEventListener('focus', function() {
+        if (sugerencias.children.length > 0 && input.value.trim().length >= 1) {
+            sugerencias.style.display = 'block';
+        }
+    });
+})();
+</script>

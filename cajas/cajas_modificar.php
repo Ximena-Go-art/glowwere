@@ -157,23 +157,23 @@ if (isset($_GET['id'])) {
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold m-0"><?= ($datos['id_caja'] != '') ? 'Editar Ajuste de Caja' : 'Nuevo Ajuste de Caja' ?></h2>
-            <p class="text-muted small">Las ventas y compras ya se registran solas en el libro; use este formulario para ingresos/egresos manuales</p>
+            <h2 class="fw-bold m-0" style="color: #29252A;"><?= ($datos['id_caja'] != '') ? 'Editar Ajuste de Caja' : 'Nuevo Ajuste de Caja' ?></h2>
+            <p class="small" style="color: #4a454a;">Las ventas y compras ya se registran solas en el libro; use este formulario para ingresos/egresos manuales</p>
         </div>
-        <a href="index.php?seccion=cajas&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
+        <a href="index.php?seccion=cajas&accion=listar" class="btn rounded-pill px-4" style="color: #29252A; border: 1px solid #C5B4E3; background: transparent;">Volver</a>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
-            <div class="card border-0 shadow-sm rounded-4">
+            <div class="card border-0 shadow-sm rounded-4" style="background: #FCE4EC;">
                 <div class="card-body p-4">
                     <form method="POST">
                         <input type="hidden" name="id_caja" value="<?= $datos['id_caja'] ?>">
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold small text-muted">Usuario que mueve la caja</label>
-                                <select name="id_usuario" class="form-select form-select-lg rounded-3" required>
+                                <label class="form-label fw-bold small" style="color: #29252A;">Usuario que mueve la caja</label>
+                                <select name="id_usuario" class="form-select form-select-lg rounded-3" required style="border-color: #F8BBD0;">
                                     <option value="">Seleccione</option>
                                     <?php while($u = mysqli_fetch_assoc($usuarios)){ ?>
                                     <option value="<?= $u['id_usuario'] ?>" <?= ($datos['id_usuario']==$u['id_usuario']) ? 'selected' : '' ?>>
@@ -183,8 +183,8 @@ if (isset($_GET['id'])) {
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold small text-muted">Forma de Pago</label>
-                                <select name="id_formas_pago" class="form-select form-select-lg rounded-3" required>
+                                <label class="form-label fw-bold small" style="color: #29252A;">Forma de Pago</label>
+                                <select name="id_formas_pago" class="form-select form-select-lg rounded-3" required style="border-color: #F8BBD0;">
                                     <option value="">Seleccione</option>
                                     <?php mysqli_data_seek($formas_pago, 0); while($fp = mysqli_fetch_assoc($formas_pago)){ ?>
                                     <option value="<?= $fp['id_formas_pago'] ?>" <?= ($datos['id_formas_pago']==$fp['id_formas_pago']) ? 'selected' : '' ?>>
@@ -197,8 +197,8 @@ if (isset($_GET['id'])) {
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold small text-muted">Proveedor (opcional)</label>
-                                <select name="id_proveedor" class="form-select form-select-lg rounded-3">
+                                <label class="form-label fw-bold small" style="color: #29252A;">Proveedor (opcional)</label>
+                                <select name="id_proveedor" class="form-select form-select-lg rounded-3" style="border-color: #F8BBD0;">
                                     <option value="">— Sin proveedor —</option>
                                     <?php while($p = mysqli_fetch_assoc($proveedores)){ ?>
                                     <option value="<?= $p['id_proveedor'] ?>" <?= ($datos['id_proveedor']==$p['id_proveedor']) ? 'selected' : '' ?>>
@@ -208,31 +208,35 @@ if (isset($_GET['id'])) {
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold small text-muted">Detalle del Movimiento</label>
+                                <label class="form-label fw-bold small" style="color: #29252A;">Detalle del Movimiento</label>
                                 <input type="text" name="detalle_movimiento" class="form-control form-control-lg rounded-3"
-                                       value="<?= htmlspecialchars($datos['detalle_movimiento']) ?>" required placeholder="Ej: Apertura de caja / Gastos varios">
+                                       value="<?= htmlspecialchars($datos['detalle_movimiento']) ?>" required placeholder="Ej: Apertura de caja / Gastos varios"
+                                       style="border-color: #F8BBD0;">
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold small text-muted">Importe (+ ingreso / − egreso)</label>
+                                <label class="form-label fw-bold small" style="color: #29252A;">Importe (+ ingreso / − egreso)</label>
                                 <div class="input-group">
-                                    <span class="input-group-text">$</span>
+                                    <span class="input-group-text" style="background: #FFF9F5; color: #29252A; border-color: #F8BBD0;">$</span>
                                     <input type="number" step="0.01" name="importe" class="form-control form-control-lg rounded-3"
-                                           value="<?= $datos['importe'] ?>" required placeholder="0.00" style="border-top-left-radius:0;border-bottom-left-radius:0">
+                                           value="<?= $datos['importe'] ?>" required placeholder="0.00"
+                                           style="border-color: #F8BBD0;">
                                 </div>
-                                <small class="text-muted">Positivo suma al saldo, negativo resta</small>
+                                <small style="color: #4a454a;">Positivo suma al saldo, negativo resta</small>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold small text-muted">Fecha y Hora</label>
+                                <label class="form-label fw-bold small" style="color: #29252A;">Fecha y Hora</label>
                                 <input type="datetime-local" name="fecha_hora" class="form-control form-control-lg rounded-3"
-                                       value="<?= substr(str_replace(' ', 'T', $datos['fecha_hora']), 0, 16) ?>">
+                                       value="<?= substr(str_replace(' ', 'T', $datos['fecha_hora']), 0, 16) ?>"
+                                       style="border-color: #F8BBD0;">
                             </div>
                         </div>
 
                         <div class="d-grid mt-3">
-                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                            <button type="submit" name="btnGuardar" class="btn btn-lg rounded-pill shadow-sm"
+                                    style="background: #F48FB1; color: #fff; border: none;">
                                 <i class="fas fa-save me-2"></i> Guardar Cambios
                             </button>
                         </div>

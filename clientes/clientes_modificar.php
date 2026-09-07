@@ -159,35 +159,38 @@ if (isset($_GET['id'])) {
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold m-0"><?= ($datos['id_cliente'] != '') ? 'Editar Cliente' : 'Nuevo Cliente' ?></h2>
-            <p class="text-muted small">Completa los datos para <?= ($datos['id_cliente'] != '') ? 'actualizar' : 'registrar' ?> el perfil</p>
+            <h2 class="fw-bold m-0" style="color: #29252A;"><?= ($datos['id_cliente'] != '') ? 'Editar Cliente' : 'Nuevo Cliente' ?></h2>
+            <p class="small" style="color: #4a454a;">Completa los datos para <?= ($datos['id_cliente'] != '') ? 'actualizar' : 'registrar' ?> el perfil</p>
         </div>
-        <a href="index.php?seccion=clientes&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">
+        <a href="index.php?seccion=clientes&accion=listar" class="btn rounded-pill px-4" style="color: #29252A; border: 1px solid #C5B4E3; background: transparent;">
             Volver
         </a>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-6">
-            <div class="card border-0 shadow-sm rounded-4">
+            <div class="card border-0 shadow-sm rounded-4" style="background: #FCE4EC;">
                 <div class="card-body p-4">
                     <form method="POST">
                         <input type="hidden" name="id_cliente" value="<?= $datos['id_cliente'] ?>">
 
                         <div class="mb-3">
-                            <label for="cliente" class="form-label fw-bold small text-muted">Nombre del Cliente</label>
+                            <label for="cliente" class="form-label fw-bold small" style="color: #29252A;">Nombre del Cliente</label>
                             <input type="text" class="form-control form-control-lg rounded-3" id="cliente" name="cliente" 
-                                   value="<?= htmlspecialchars($datos['cliente']) ?>" required placeholder="Nombre completo">
+                                   value="<?= htmlspecialchars($datos['cliente']) ?>" required placeholder="Nombre completo"
+                                   style="border-color: #F8BBD0;">
                         </div>
 
                         <div class="mb-4">
-                            <label for="documento" class="form-label fw-bold small text-muted">Documento</label>
+                            <label for="documento" class="form-label fw-bold small" style="color: #29252A;">Documento</label>
                             <input type="text" class="form-control form-control-lg rounded-3" id="documento" name="documento" 
-                                   value="<?= htmlspecialchars($datos['documento']) ?>" required placeholder="Ej: 12345678">
+                                   value="<?= htmlspecialchars($datos['documento']) ?>" required placeholder="Ej: 12345678"
+                                   style="border-color: #F8BBD0;">
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                            <button type="submit" name="btnGuardar" class="btn btn-lg rounded-pill shadow-sm"
+                                    style="background: #F48FB1; color: #fff; border: none;">
                                 <i class="fas fa-save me-2"></i> Guardar Cambios
                             </button>
                         </div>

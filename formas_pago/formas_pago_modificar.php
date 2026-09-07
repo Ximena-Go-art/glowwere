@@ -113,7 +113,7 @@ if (isset($_GET['id'])) {
             <h2 class="fw-bold m-0"><?= ($datos['id_formas_pago'] != '') ? 'Editar Forma de Pago' : 'Nueva Forma de Pago' ?></h2>
             <p class="text-muted small">Completa los datos para <?= ($datos['id_formas_pago'] != '') ? 'actualizar' : 'registrar' ?> la forma de pago</p>
         </div>
-        <a href="index.php?seccion=formas_pago&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
+        <a href="index.php?seccion=formas_pago&accion=listar" class="btn rounded-pill px-4" style="border-color:#C5B4E3;color:#C5B4E3">Volver</a>
     </div>
 
     <div class="row justify-content-center">
@@ -130,7 +130,7 @@ if (isset($_GET['id'])) {
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                            <button type="submit" name="btnGuardar" class="btn btn-lg rounded-pill shadow-sm" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff">
                                 <i class="fas fa-save me-2"></i> Guardar Cambios
                             </button>
                         </div>

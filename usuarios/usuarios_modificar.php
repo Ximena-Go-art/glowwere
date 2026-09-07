@@ -26,7 +26,7 @@ if (isset($_POST['btnGuardar'])) {
                 (
                     usuario,
                     email,
-                    contraseña,
+                    pass,
                     id_rol,
                     actividad_usuario,
                     fecha_registro,
@@ -77,7 +77,7 @@ if (isset($_POST['btnGuardar'])) {
 
                     usuario='$usuario',
                     email='$email',
-                    contraseña='$contrasena',
+                    pass='$contrasena',
                     id_rol='$id_rol',
                     actividad_usuario='$activo'
 
@@ -142,7 +142,7 @@ if (isset($_GET['id'])) {
             <h2 class="fw-bold m-0"><?= isset($campos['id_usuario']) ? 'Editar Usuario' : 'Nuevo Usuario' ?></h2>
             <p class="text-muted small">Completa los datos para <?= isset($campos['id_usuario']) ? 'actualizar' : 'registrar' ?> el usuario</p>
         </div>
-        <a href="index.php?seccion=usuarios&accion=listar" class="btn btn-outline-secondary rounded-pill px-4">Volver</a>
+        <a href="index.php?seccion=usuarios&accion=listar" class="btn rounded-pill px-4" style="border-color:#C5B4E3;color:#C5B4E3">Volver</a>
     </div>
 
     <div class="row justify-content-center">
@@ -167,7 +167,7 @@ if (isset($_GET['id'])) {
                         <div class="mb-3">
                             <label class="form-label fw-bold small text-muted">Contraseña</label>
                             <input type="password" class="form-control form-control-lg rounded-3" name="contrasena" required
-                                   value="<?= isset($campos['contraseña']) ? htmlspecialchars($campos['contraseña']) : '' ?>" placeholder="••••••••">
+                                   value="<?= isset($campos['pass']) ? htmlspecialchars($campos['pass']) : '' ?>" placeholder="••••••••">
                         </div>
 
                         <div class="mb-3">
@@ -192,7 +192,7 @@ if (isset($_GET['id'])) {
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" name="btnGuardar" class="btn btn-danger btn-lg rounded-pill shadow-sm">
+                            <button type="submit" name="btnGuardar" class="btn btn-lg rounded-pill shadow-sm" style="background-color:#F48FB1;border-color:#F48FB1;color:#fff">
                                 <i class="fas fa-save me-2"></i> Guardar Cambios
                             </button>
                         </div>

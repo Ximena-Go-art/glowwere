@@ -1,6 +1,6 @@
 <?php
 
-include "conexion.php";
+include_once "conexion.php";
 
 $cnn = conection();
 
@@ -56,7 +56,8 @@ if (isset($_POST['btnGuardar'])) {
             id_producto,
             cantidad,
             precio_unitario,
-            precio_total
+            precio_total,
+            deleted
         )
         VALUES
         (
@@ -64,10 +65,21 @@ if (isset($_POST['btnGuardar'])) {
             $id_producto,
             $cantidad,
             $precio_unitario,
-            $precio_total
+            $precio_total,
+            0
         )";
+        $resultado = mysqli_query($cnn, $sql);
+        if ($resultado) {
+            mysqli_query($cnn, "UPDATE productos SET stock = stock + $cantidad WHERE id_producto = $id_producto");
+        }
 
     } else {
+
+        // Revertir stock viejo
+        $antes = mysqli_query($cnn, "SELECT cantidad FROM compra_detalles WHERE id_compra_detalle = $id_compra_detalle");
+        if ($antes && $fila = mysqli_fetch_assoc($antes)) {
+            mysqli_query($cnn, "UPDATE productos SET stock = stock - " . intval($fila['cantidad']) . " WHERE id_producto = $id_producto");
+        }
 
         $sql = "
         UPDATE compra_detalles
@@ -78,9 +90,11 @@ if (isset($_POST['btnGuardar'])) {
             precio_unitario = $precio_unitario,
             precio_total = $precio_total
         WHERE id_compra_detalle = $id_compra_detalle";
+        $resultado = mysqli_query($cnn, $sql);
+        if ($resultado) {
+            mysqli_query($cnn, "UPDATE productos SET stock = stock + $cantidad WHERE id_producto = $id_producto");
+        }
     }
-
-    $resultado = mysqli_query($cnn, $sql);
 
     if ($resultado) {
 
