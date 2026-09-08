@@ -59,10 +59,6 @@ if ($filtro_hasta != '') {
 $where = implode(" AND ", $condiciones);
 $hayFiltros = ($filtro_buscar != '' || $filtro_estado != '' || $filtro_desde != '' || $filtro_hasta != '');
 
-/* Ordenamiento */
-$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_ventas';
-$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
-
 /* Consulta */
 
 $sql = "SELECT 
@@ -87,7 +83,7 @@ $sql = "SELECT
         INNER JOIN tipos_documentos td ON v.tipo_documento = td.id_tipo_documento 
         INNER JOIN formas_pagos fp ON v.id_formas_pago = fp.id_formas_pago 
         WHERE $where
-        ORDER BY $orden $direccion";
+        ORDER BY id_ventas DESC";
 
 $pag = paginar_consulta($cnn, $sql, 10);
 $resultado = $pag['data'];
@@ -150,10 +146,7 @@ $resultado = $pag['data'];
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background: #FFF9F5;">
                         <tr>
-                            <th class="ps-4" style="color: #29252A;">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_ventas'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4" style="color: #29252A;">ID</th>
                             <th style="color: #29252A;">Usuario</th>
                             <th style="color: #29252A;">Cliente</th>
                             <th style="color: #29252A;">Doc.</th>

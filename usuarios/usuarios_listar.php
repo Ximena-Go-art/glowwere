@@ -60,17 +60,13 @@ if ($filtro_estado >= 0) {
 
 $where = implode(" AND ", $condiciones);
 
-/* Ordenamiento */
-$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_usuario';
-$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
-
 $listaRoles = mysqli_query($cnn, "SELECT id_rol, nombre FROM roles WHERE deleted = 0 ORDER BY nombre ASC");
 
 $sql = "SELECT u.*, r.nombre AS rol
         FROM usuarios u
         LEFT JOIN roles r ON u.id_rol = r.id_rol
         WHERE $where
-        ORDER BY $orden $direccion";
+        ORDER BY id_usuario DESC";
 
 $pag = paginar_consulta($cnn, $sql, 10);
 $result = $pag['data'];
@@ -134,10 +130,7 @@ $hayFiltros = ($filtro_buscar != '' || $filtro_rol > 0 || $filtro_estado >= 0);
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_usuario'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4">ID</th>
                             <th>Usuario</th>
                             <th>Email</th>
                             <th>Rol</th>

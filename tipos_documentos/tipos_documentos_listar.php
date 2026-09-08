@@ -12,13 +12,9 @@ if ($filtro_buscar != '') {
 }
 $where = implode(" AND ", $condiciones);
 
-/* Ordenamiento */
-$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_tipo_documento';
-$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
-
 /* Consulta */
 
-$sql = "SELECT id_tipo_documento, descripcion FROM tipos_documentos WHERE $where ORDER BY $orden $direccion";
+$sql = "SELECT id_tipo_documento, descripcion FROM tipos_documentos WHERE $where ORDER BY id_tipo_documento DESC";
 
 /* Eliminación lógica */
 
@@ -92,10 +88,7 @@ $hayFiltros = ($filtro_buscar != '');
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_tipo_documento'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4">ID</th>
                             <th>Descripción</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>

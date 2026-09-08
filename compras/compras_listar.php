@@ -45,10 +45,6 @@ if ($filtro_hasta != '') {
 $where = implode(" AND ", $condiciones);
 $hayFiltros = ($filtro_buscar != '' || $filtro_desde != '' || $filtro_hasta != '');
 
-/* Ordenamiento */
-$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_compra';
-$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
-
 /* Consulta */
 
 $sql = "
@@ -72,7 +68,7 @@ INNER JOIN tipos_documentos td
     ON c.id_tipo_documento = td.id_tipo_documento
 
 WHERE $where
-ORDER BY $orden $direccion
+ORDER BY id_compra DESC
 ";
 
 $pag = paginar_consulta($cnn, $sql, 10);
@@ -128,10 +124,7 @@ $resultado = $pag['data'];
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_compra'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4">ID</th>
                             <th>Usuario</th>
                             <th>Proveedor</th>
                             <th>Tipo Doc.</th>

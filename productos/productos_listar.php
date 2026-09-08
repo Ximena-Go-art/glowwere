@@ -35,7 +35,7 @@ $listaFamilias = mysqli_query($cnn, "SELECT id_familia, familia FROM familias WH
 $sql = "SELECT p.*, f.familia AS familia 
         FROM productos p 
         LEFT JOIN familias f ON p.id_familia = f.id_familia 
-        WHERE $where ORDER BY p.nombre";
+        WHERE $where ORDER BY p.id_producto DESC";
 $pag = paginar_consulta($cnn, $sql, 10);
 $result = $pag['data'];
 $hayFiltros = ($filtro_buscar != '' || $filtro_familia > 0 || $filtro_stock >= 0);
@@ -97,12 +97,9 @@ $hayFiltros = ($filtro_buscar != '' || $filtro_familia > 0 || $filtro_stock >= 0
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_producto'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">Código <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4">Código</th>
                             <th>Nombre</th>
-                            <th>Familia</th>
+                            <th></th>
                             <th>Costo</th>
                             <th>Precio</th>
                             <th>Stock</th>

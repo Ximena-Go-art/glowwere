@@ -113,16 +113,12 @@ $sql = "SELECT
         LEFT JOIN usuarios u
             ON r.id_usuario = u.id_usuario
         WHERE $where
-        ORDER BY $orden $direccion";
+        ORDER BY id_registros DESC";
 
 $pag = paginar_consulta($cnn, $sql, 15);
 $result = $pag['data'];
 
 $hayFiltros = ($filtro_usuario > 0 || $filtro_seccion != '' || $filtro_buscar != '' || $filtro_desde != '' || $filtro_hasta != '');
-
-/* Ordenamiento */
-$orden = isset($_GET['orden']) ? $_GET['orden'] : 'id_registros';
-$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
 
 $coloresSeccion = array(
     'Ventas'              => 'danger',
@@ -280,10 +276,7 @@ $coloresSeccion = array(
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background-color:#FFF9F5">
                         <tr>
-                            <th class="ps-4">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'id_registros'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">ID <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4">ID</th>
                             <th>Fecha y Hora</th>
                             <th>Usuario</th>
                             <th>Sección</th>

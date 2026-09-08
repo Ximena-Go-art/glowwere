@@ -29,10 +29,6 @@ if ($filtro_hasta != '') {
 $whereFiltros = implode(" AND ", $condiciones);
 $hayFiltros = ($filtro_buscar != '' || $filtro_origen != '' || $filtro_desde != '' || $filtro_hasta != '');
 
-/* Ordenamiento */
-$orden = isset($_GET['orden']) ? $_GET['orden'] : 'fecha_movimiento';
-$direccion = (isset($_GET['dir']) && $_GET['dir'] === 'DESC') ? 'DESC' : 'ASC';
-
 /* Consulta: libro de caja unificado */
 
 $sqlUnion = "SELECT * FROM (
@@ -92,7 +88,7 @@ $resSaldo = mysqli_query($cnn, $sqlSaldo);
 $filaSaldo = mysqli_fetch_assoc($resSaldo);
 $total_caja = floatval($filaSaldo['saldo']);
 
-$pag = paginar_consulta($cnn, "$sqlUnion ORDER BY $orden $direccion", 10);
+$pag = paginar_consulta($cnn, "$sqlUnion ORDER BY fecha_movimiento DESC", 10);
 $resultado = $pag['data'];
 ?>
 
@@ -153,10 +149,7 @@ $resultado = $pag['data'];
                 <table class="table table-hover align-middle mb-0">
                     <thead style="background: #FFF9F5;">
                         <tr>
-                            <th class="ps-4" style="color: #29252A;">
-                                <?php $nuevaDir = ($direccion === 'ASC') ? 'DESC' : 'ASC'; $sp = $_GET; $sp['orden'] = 'fecha_movimiento'; $sp['dir'] = $nuevaDir; unset($sp['pagina']); ?>
-                                <a href="index.php?<?= http_build_query($sp) ?>" style="text-decoration:none; color:inherit;">Fecha / Hora <?= $direccion === 'ASC' ? '<i class="fas fa-sort-up"></i>' : '<i class="fas fa-sort-down"></i>' ?></a>
-                            </th>
+                            <th class="ps-4" style="color: #29252A;">Fecha / Hora</th>
                             <th style="color: #29252A;">Origen</th>
                             <th style="color: #29252A;">Detalle</th>
                             <th style="color: #29252A;">Usuario</th>
